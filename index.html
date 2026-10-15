@@ -36,14 +36,14 @@
   <link rel="stylesheet" href="css/loader.css">
 
   <style>
-    /* Écran d'accueil type Discovery Quest */
+    /* Écran d'accueil interactif */
     #landing-page {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(rgba(26, 37, 44, 0.85), rgba(26, 37, 44, 0.95)), url('media/toulon.jpg') no-repeat center center;
+      background: linear-gradient(rgba(26, 37, 44, 0.9), rgba(26, 37, 44, 0.95)), url('media/toulon.jpg') no-repeat center center;
       background-size: cover;
       z-index: 99999;
       display: flex;
@@ -51,47 +51,80 @@
       align-items: center;
       font-family: sans-serif;
       color: white;
-      text-align: center;
       padding: 20px;
       box-sizing: border-box;
+      overflow-y: auto;
     }
     .landing-card {
-      max-width: 600px;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 40px;
-      border-radius: 10px;
+      max-width: 550px;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 35px;
+      border-radius: 12px;
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+      text-align: left;
     }
     .landing-card h1 {
-      font-size: 28px;
-      margin-bottom: 15px;
+      font-size: 24px;
+      margin-bottom: 10px;
       color: #ffcc00;
+      text-align: center;
     }
     .landing-card p {
-      font-size: 16px;
-      line-height: 1.6;
-      margin-bottom: 25px;
+      font-size: 15px;
+      line-height: 1.5;
+      margin-bottom: 20px;
       color: #e2e8f0;
+      text-align: center;
+    }
+    .quest-options {
+      margin-bottom: 20px;
+      background: rgba(0,0,0,0.2);
+      padding: 15px;
+      border-radius: 8px;
+    }
+    .quest-options label {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 14px;
+      cursor: pointer;
+      color: #f8fafc;
+    }
+    .quest-options input[type="radio"], .quest-options input[type="checkbox"] {
+      margin-right: 10px;
+      accent-color: #ffcc00;
+    }
+    .duration-note {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-top: 5px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    .expert-box {
+      border-top: 1px solid rgba(255,255,255,0.2);
+      padding-top: 15px;
+      margin-top: 15px;
     }
     .btn-start {
       background-color: #ffcc00;
       color: #1a252c;
       border: none;
-      padding: 12px 30px;
+      width: 100%;
+      padding: 14px;
       font-size: 16px;
       font-weight: bold;
-      border-radius: 5px;
+      border-radius: 6px;
       cursor: pointer;
       transition: background 0.2s, transform 0.2s;
     }
     .btn-start:hover {
       background-color: #e6b800;
-      transform: scale(1.05);
+      transform: scale(1.02);
     }
 
-    /* Barre de navigation supérieure */
+    /* Barre de navigation épurée */
     .quest-nav-bar {
       background: #1a252c;
       color: white;
@@ -137,36 +170,45 @@
       margin-bottom: 30px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.08);
     }
-    
-    #about-section {
-      text-align: left !important;
-      padding: 20px;
-      font-family: sans-serif;
-      background: #f8f9fa;
-      border-radius: 6px;
-      border: 1px solid #e9ecef;
-    }
   </style>
 </head>
 
 <body>
 
-  <!-- Écran d'accueil (Landing Page) type Discovery Quest -->
+  <!-- Écran d'accueil interactif (Configuration de la visite) -->
   <div id="landing-page">
     <div class="landing-card">
       <h1>Sur les traces de la Marine à Toulon</h1>
-      <p>Bienvenue dans cette quête interactive et mémorielle. Explorez l'histoire maritime, militaire et civile de Toulon à travers treize étapes clés.</p>
-      <button class="btn-start" onclick="startQuest()">Commencer la balade</button>
+      <p>Nous allons bientôt commencer.</p>
+      
+      <div style="font-weight: bold; margin-bottom: 8px; font-size: 14px; color: #ffcc00;">Quelle sera la durée de notre visite ?</div>
+      <div class="quest-options">
+        <label><input type="radio" name="duration" value="standard" checked> Standard : 1 heure</label>
+        <label><input type="radio" name="duration" value="short"> Courte : 30 minutes</label>
+      </div>
+      <div class="duration-note">Durée indicative. Votre progression est sauvegardée automatiquement.</div>
+
+      <div class="expert-box">
+        <div style="font-size: 13px; margin-bottom: 8px; color: #cbd5e1;">Pour une aventure plus corsée, vous pouvez cocher cette option :</div>
+        <div class="quest-options" style="margin-bottom: 0;">
+          <label style="font-weight: bold; color: #ffcc00;"><input type="checkbox" id="expert-mode"> Mode Expert</label>
+          <div style="font-size: 12px; color: #94a3b8; margin-left: 24px; line-height: 1.4;">
+            - Nombre limité d'essais<br>
+            - Chronométré
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-start" style="margin-top: 20px;" onclick="startQuest()">C'est parti !</button>
     </div>
   </div>
 
-  <!-- Barre de navigation -->
+  <!-- Barre de navigation épurée -->
   <div class="quest-nav-bar">
-    <div class="quest-nav-brand">Toulon Discovery Quest</div>
+    <div class="quest-nav-brand">Marine à Toulon</div>
     <div class="quest-nav-links">
       <a href="#map">Carte</a>
       <a href="#narration">Parcours</a>
-      <a href="#about">Projet Univ Toulon</a>
     </div>
   </div>
 
@@ -178,16 +220,6 @@
   <div id="narration">
     <div id="contents">
       <div id="top"></div>
-      
-      <!-- Section À propos -->
-      <div id="about" style="margin-top: 40px; padding: 10px;">
-        <div id="about-section">
-          <h3>À propos du projet</h3>
-          <p><strong>Projet Université de Toulon</strong></p>
-          <p>Ce parcours mémoriel et interactif explore l'histoire maritime de Toulon sous la forme d'un carnet de quête urbaine.</p>
-        </div>
-      </div>
-
     </div>
   </div>
 
@@ -203,7 +235,7 @@
       tap: false
     });
 
-    // Fonction pour masquer l'écran d'accueil et lancer la balade
+    // Fonction pour lancer la balade
     function startQuest() {
       const landing = document.getElementById('landing-page');
       landing.style.opacity = '0';
