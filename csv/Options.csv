@@ -1,11 +1,11 @@
 Setting,Customize,Hints
 Storymap Info,,"For help, see tutorial in [HandsOnDataViz.org](https://handsondataviz.org/leaflet-storymaps-with-google-sheets.html)"
 Storymap Title,Sur les traces de la Marine à Toulon,
-Storymap Subtitle,Une balade mémorielle en six étapes<br><small>Faites défiler</small>,"Add your subtitle, or delete that portion"
+Storymap Subtitle,Une balade mémorielle en treize étapes<br><small>Faites défiler</small>,"Add your subtitle, or delete that portion"
 Storymap Logo,,Path to a logo image
 Google Analytics Tracking ID,,Sample format: UA-5488840-29
 Map Settings,,
-Basemap Tiles,CartoDB.Positron,[Drop-down menu for background basemap tiles](https://leaflet-extras.github.io/leaflet-providers/preview/)
+Basemap Tiles,OpenStreetMap.HOT,[Drop-down menu for background basemap tiles](https://leaflet-extras.github.io/leaflet-providers/preview/)
 Zoom Controls,bottomright,
 Narrative Background Color,,
 Narrative Text Color,,
@@ -16,6 +16,6 @@ Pixels After Final Chapter,600,"In pixels, at least 100"
 Enable Lightbox for Images,yes,yes or no
 Credits,,
 Author Name,"Projet étudiant, Université de Toulon","Appears in map credits as ""View data by..."" (or leave blank)"
-Author Email or Website,,Create link in Author Name by inserting your email or web address (or leave blank)
+Author Email or Website,,Create link in Author Name by inserting your email or web address (or leave blank)"
 Author GitHub Repo Link,,"Insert your code repo URL to appear as link in ""View code..."" (or leave blank)"
 Code Credit,"<a href=""https://handsondataviz.org"">HandsOnDataViz</a>","Appears in credits as ""...code by..."" (or leave blank)"
