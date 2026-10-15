@@ -36,7 +36,7 @@
   <link rel="stylesheet" href="css/loader.css">
 
   <style>
-    /* Barre de navigation Discovery Quest sans emojis et alignée proprement */
+    /* Style Discovery Quest - Barre de Navigation */
     .quest-nav-bar {
       background: #1a252c;
       color: white;
@@ -57,6 +57,7 @@
       font-weight: bold;
       font-size: 16px;
       letter-spacing: 0.5px;
+      color: #ffcc00;
     }
     .quest-nav-links {
       display: flex;
@@ -71,15 +72,27 @@
     .quest-nav-links a:hover {
       color: #ffffff;
     }
-    /* Décalage de la page pour ne pas cacher le contenu sous la barre fixe */
     body {
       padding-top: 45px;
     }
-    /* Style non centré pour la section À propos / Projet */
+    
+    /* Style Carnet de Mission pour les blocs de texte */
+    .leaflet-storymap .chapter {
+      background: #ffffff;
+      border-left: 5px solid #1a252c;
+      border-radius: 4px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+    
     #about-section {
       text-align: left !important;
-      padding: 15px;
+      padding: 20px;
       font-family: sans-serif;
+      background: #f8f9fa;
+      border-radius: 6px;
+      border: 1px solid #e9ecef;
     }
   </style>
 </head>
@@ -90,8 +103,8 @@
   <div class="quest-nav-bar">
     <div class="quest-nav-brand">Toulon Discovery Quest</div>
     <div class="quest-nav-links">
-      <a href="#map">La Carte</a>
-      <a href="#narration">Parcours</a>
+      <a href="#map">Carte</a>
+      <a href="#narration">Parcours de Quête</a>
       <a href="#about">Projet Univ Toulon</a>
     </div>
   </div>
@@ -105,12 +118,12 @@
     <div id="contents">
       <div id="top"></div>
       
-      <!-- Section À propos alignée à gauche -->
-      <div id="about" style="margin-top: 40px; border-top: 1px solid #ddd; padding-top: 20px;">
+      <!-- Section À propos -->
+      <div id="about" style="margin-top: 40px; padding: 10px;">
         <div id="about-section">
           <h3>À propos du projet</h3>
           <p><strong>Projet Université de Toulon</strong></p>
-          <p>Ce parcours mémoriel et interactif explore l'histoire maritime, militaire et civile de Toulon à travers un format de quête et d'exploration urbaine.</p>
+          <p>Ce parcours mémoriel et interactif explore l'histoire maritime, militaire et civile de Toulon sous la forme d'un carnet de quête urbaine.</p>
         </div>
       </div>
 
@@ -121,7 +134,6 @@
   <div id="map"></div>
 
   <script type="text/javascript">
-    // Create the Leaflet map centered on Toulon
     var map = L.map('map', {
       center: [43.1206, 5.9282],
       zoom: 13,
