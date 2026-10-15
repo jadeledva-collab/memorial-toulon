@@ -3,7 +3,7 @@
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no"/>
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no"/>
   <link rel="icon" type="image/png" href="./favicon.png">
   <title>Sur les traces de la Marine à Toulon - Université de Toulon</title>
 
@@ -34,9 +34,67 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/style-desktop.css">
   <link rel="stylesheet" href="css/loader.css">
+
+  <style>
+    /* Barre de navigation Discovery Quest sans emojis et alignée proprement */
+    .quest-nav-bar {
+      background: #1a252c;
+      color: white;
+      padding: 12px 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: sans-serif;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 9999;
+      box-sizing: border-box;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    .quest-nav-brand {
+      font-weight: bold;
+      font-size: 16px;
+      letter-spacing: 0.5px;
+    }
+    .quest-nav-links {
+      display: flex;
+      gap: 20px;
+    }
+    .quest-nav-links a {
+      color: #b0c4de;
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+    .quest-nav-links a:hover {
+      color: #ffffff;
+    }
+    /* Décalage de la page pour ne pas cacher le contenu sous la barre fixe */
+    body {
+      padding-top: 45px;
+    }
+    /* Style non centré pour la section À propos / Projet */
+    #about-section {
+      text-align: left !important;
+      padding: 15px;
+      font-family: sans-serif;
+    }
+  </style>
 </head>
 
 <body>
+
+  <!-- Barre de navigation Discovery Quest -->
+  <div class="quest-nav-bar">
+    <div class="quest-nav-brand">Toulon Discovery Quest</div>
+    <div class="quest-nav-links">
+      <a href="#map">La Carte</a>
+      <a href="#narration">Parcours</a>
+      <a href="#about">Projet Univ Toulon</a>
+    </div>
+  </div>
 
   <div id="title">
     <div id="logo"></div>
@@ -46,6 +104,16 @@
   <div id="narration">
     <div id="contents">
       <div id="top"></div>
+      
+      <!-- Section À propos alignée à gauche -->
+      <div id="about" style="margin-top: 40px; border-top: 1px solid #ddd; padding-top: 20px;">
+        <div id="about-section">
+          <h3>À propos du projet</h3>
+          <p><strong>Projet Université de Toulon</strong></p>
+          <p>Ce parcours mémoriel et interactif explore l'histoire maritime, militaire et civile de Toulon à travers un format de quête et d'exploration urbaine.</p>
+        </div>
+      </div>
+
     </div>
   </div>
 
