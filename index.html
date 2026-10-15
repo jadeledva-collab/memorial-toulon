@@ -36,7 +36,62 @@
   <link rel="stylesheet" href="css/loader.css">
 
   <style>
-    /* Style Discovery Quest - Barre de Navigation */
+    /* Écran d'accueil type Discovery Quest */
+    #landing-page {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(rgba(26, 37, 44, 0.85), rgba(26, 37, 44, 0.95)), url('media/toulon.jpg') no-repeat center center;
+      background-size: cover;
+      z-index: 99999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: sans-serif;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .landing-card {
+      max-width: 600px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 40px;
+      border-radius: 10px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .landing-card h1 {
+      font-size: 28px;
+      margin-bottom: 15px;
+      color: #ffcc00;
+    }
+    .landing-card p {
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 25px;
+      color: #e2e8f0;
+    }
+    .btn-start {
+      background-color: #ffcc00;
+      color: #1a252c;
+      border: none;
+      padding: 12px 30px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn-start:hover {
+      background-color: #e6b800;
+      transform: scale(1.05);
+    }
+
+    /* Barre de navigation supérieure */
     .quest-nav-bar {
       background: #1a252c;
       color: white;
@@ -56,7 +111,6 @@
     .quest-nav-brand {
       font-weight: bold;
       font-size: 16px;
-      letter-spacing: 0.5px;
       color: #ffcc00;
     }
     .quest-nav-links {
@@ -67,7 +121,6 @@
       color: #b0c4de;
       text-decoration: none;
       font-size: 14px;
-      transition: color 0.2s;
     }
     .quest-nav-links a:hover {
       color: #ffffff;
@@ -76,7 +129,6 @@
       padding-top: 45px;
     }
     
-    /* Style Carnet de Mission pour les blocs de texte */
     .leaflet-storymap .chapter {
       background: #ffffff;
       border-left: 5px solid #1a252c;
@@ -99,12 +151,21 @@
 
 <body>
 
-  <!-- Barre de navigation Discovery Quest -->
+  <!-- Écran d'accueil (Landing Page) type Discovery Quest -->
+  <div id="landing-page">
+    <div class="landing-card">
+      <h1>Sur les traces de la Marine à Toulon</h1>
+      <p>Bienvenue dans cette quête interactive et mémorielle. Explorez l'histoire maritime, militaire et civile de Toulon à travers treize étapes clés.</p>
+      <button class="btn-start" onclick="startQuest()">Commencer la balade</button>
+    </div>
+  </div>
+
+  <!-- Barre de navigation -->
   <div class="quest-nav-bar">
     <div class="quest-nav-brand">Toulon Discovery Quest</div>
     <div class="quest-nav-links">
       <a href="#map">Carte</a>
-      <a href="#narration">Parcours de Quête</a>
+      <a href="#narration">Parcours</a>
       <a href="#about">Projet Univ Toulon</a>
     </div>
   </div>
@@ -123,7 +184,7 @@
         <div id="about-section">
           <h3>À propos du projet</h3>
           <p><strong>Projet Université de Toulon</strong></p>
-          <p>Ce parcours mémoriel et interactif explore l'histoire maritime, militaire et civile de Toulon sous la forme d'un carnet de quête urbaine.</p>
+          <p>Ce parcours mémoriel et interactif explore l'histoire maritime de Toulon sous la forme d'un carnet de quête urbaine.</p>
         </div>
       </div>
 
@@ -141,6 +202,16 @@
       zoomControl: false,
       tap: false
     });
+
+    // Fonction pour masquer l'écran d'accueil et lancer la balade
+    function startQuest() {
+      const landing = document.getElementById('landing-page');
+      landing.style.opacity = '0';
+      landing.style.transition = 'opacity 0.5s ease';
+      setTimeout(function() {
+        landing.style.display = 'none';
+      }, 500);
+    }
   </script>
 
   <script type="text/javascript" src="google-doc-url.js"></script>
