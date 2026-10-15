@@ -5,7 +5,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no"/>
   <link rel="icon" type="image/png" href="./favicon.png">
-  <title>Sur les traces de la Marine à Toulon - Université de Toulon</title>
+  <title>Sur les traces de la Marine à Toulon</title>
 
   <!-- Load Leaflet CSS and JS-->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
@@ -36,14 +36,14 @@
   <link rel="stylesheet" href="css/loader.css">
 
   <style>
-    /* Écran d'accueil interactif */
-    #landing-page {
+    /* Styles communs aux écrans d'accueil / étapes 1 et 2 */
+    .screen-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(rgba(26, 37, 44, 0.9), rgba(26, 37, 44, 0.95)), url('media/toulon.jpg') no-repeat center center;
+      background: linear-gradient(rgba(26, 37, 44, 0.92), rgba(26, 37, 44, 0.98)), url('media/toulon.jpg') no-repeat center center;
       background-size: cover;
       z-index: 99999;
       display: flex;
@@ -55,7 +55,7 @@
       box-sizing: border-box;
       overflow-y: auto;
     }
-    .landing-card {
+    .screen-card {
       max-width: 550px;
       background: rgba(255, 255, 255, 0.08);
       padding: 35px;
@@ -65,33 +65,49 @@
       box-shadow: 0 15px 35px rgba(0,0,0,0.6);
       text-align: left;
     }
-    .landing-card h1 {
+    .screen-card h1 {
       font-size: 24px;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
       color: #ffcc00;
       text-align: center;
     }
-    .landing-card p {
+    .screen-card p {
       font-size: 15px;
       line-height: 1.5;
       margin-bottom: 20px;
       color: #e2e8f0;
-      text-align: center;
     }
-    .quest-options {
+    .btn-action {
+      background-color: #ffcc00;
+      color: #1a252c;
+      border: none;
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      margin-top: 20px;
+    }
+    .btn-action:hover {
+      background-color: #e6b800;
+      transform: scale(1.02);
+    }
+    .options-box {
       margin-bottom: 20px;
       background: rgba(0,0,0,0.2);
       padding: 15px;
       border-radius: 8px;
     }
-    .quest-options label {
+    .options-box label {
       display: block;
       margin-bottom: 10px;
       font-size: 14px;
       cursor: pointer;
       color: #f8fafc;
     }
-    .quest-options input[type="radio"], .quest-options input[type="checkbox"] {
+    .options-box input[type="radio"], .options-box input[type="checkbox"] {
       margin-right: 10px;
       accent-color: #ffcc00;
     }
@@ -107,24 +123,15 @@
       padding-top: 15px;
       margin-top: 15px;
     }
-    .btn-start {
-      background-color: #ffcc00;
-      color: #1a252c;
-      border: none;
-      width: 100%;
-      padding: 14px;
-      font-size: 16px;
-      font-weight: bold;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.2s;
-    }
-    .btn-start:hover {
-      background-color: #e6b800;
-      transform: scale(1.02);
+    .footer-legal {
+      font-size: 11px;
+      color: #94a3b8;
+      text-align: center;
+      margin-top: 20px;
+      line-height: 1.4;
     }
 
-    /* Barre de navigation épurée */
+    /* Barre de navigation supérieure (Page 3) */
     .quest-nav-bar {
       background: #1a252c;
       color: white;
@@ -175,14 +182,29 @@
 
 <body>
 
-  <!-- Écran d'accueil interactif (Configuration de la visite) -->
-  <div id="landing-page">
-    <div class="landing-card">
-      <h1>Sur les traces de la Marine à Toulon</h1>
-      <p>Nous allons bientôt commencer.</p>
+  <!-- ÉTAPE 1 : Première page d'accueil -->
+  <div id="screen-1" class="screen-overlay">
+    <div class="screen-card">
+      <h1>Bienvenue !</h1>
+      <p>Bienvenue dans cette visite interactive qui vous mènera aux quatre coins de l'histoire maritime, militaire et civile de Toulon.</p>
+      <div style="margin-bottom: 15px; font-size: 14px; color: #cbd5e1;">
+        - Langue : Français<br>
+        - Options d'accessibilité disponibles
+      </div>
+      <p style="font-size: 13px; color: #cbd5e1; font-style: italic;">Munissez-vous de votre carnet de notes ou suivez le guide pas à pas.</p>
+      <div style="font-weight: bold; text-align: center; margin-top: 15px; color: #ffcc00;">Vous êtes prêt ?</div>
+      <button class="btn-action" onclick="goToScreen2()">Commencer</button>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 2 : Deuxième page (Configuration Durée & Mode Expert) -->
+  <div id="screen-2" class="screen-overlay" style="display: none;">
+    <div class="screen-card">
+      <h1>Configuration de la visite</h1>
+      <p style="text-align: center; margin-bottom: 15px;">Nous allons bientôt commencer.</p>
       
       <div style="font-weight: bold; margin-bottom: 8px; font-size: 14px; color: #ffcc00;">Quelle sera la durée de notre visite ?</div>
-      <div class="quest-options">
+      <div class="options-box">
         <label><input type="radio" name="duration" value="standard" checked> Standard : 1 heure</label>
         <label><input type="radio" name="duration" value="short"> Courte : 30 minutes</label>
       </div>
@@ -190,7 +212,7 @@
 
       <div class="expert-box">
         <div style="font-size: 13px; margin-bottom: 8px; color: #cbd5e1;">Pour une aventure plus corsée, vous pouvez cocher cette option :</div>
-        <div class="quest-options" style="margin-bottom: 0;">
+        <div class="options-box" style="margin-bottom: 0;">
           <label style="font-weight: bold; color: #ffcc00;"><input type="checkbox" id="expert-mode"> Mode Expert</label>
           <div style="font-size: 12px; color: #94a3b8; margin-left: 24px; line-height: 1.4;">
             - Nombre limité d'essais<br>
@@ -199,11 +221,18 @@
         </div>
       </div>
 
-      <button class="btn-start" style="margin-top: 20px;" onclick="startQuest()">C'est parti !</button>
+      <button class="btn-action" onclick="startBalade()">C'est parti !</button>
+
+      <div class="footer-legal">
+        Ce site ne collecte pas de données personnelles.<br>
+        Mentions légales et conditions d'utilisation du site web<br>
+        Règles européennes de Respect de la Vie privée<br>
+        © Marine à Toulon. Tous droits réservés.
+      </div>
     </div>
   </div>
 
-  <!-- Barre de navigation épurée -->
+  <!-- ÉTAPE 3 : Troisième page (La Balade / Carte interactive) -->
   <div class="quest-nav-bar">
     <div class="quest-nav-brand">Marine à Toulon</div>
     <div class="quest-nav-links">
@@ -235,13 +264,19 @@
       tap: false
     });
 
-    // Fonction pour lancer la balade
-    function startQuest() {
-      const landing = document.getElementById('landing-page');
-      landing.style.opacity = '0';
-      landing.style.transition = 'opacity 0.5s ease';
+    // Passage de l'étape 1 à l'étape 2
+    function goToScreen2() {
+      document.getElementById('screen-1').style.display = 'none';
+      document.getElementById('screen-2').style.display = 'flex';
+    }
+
+    // Passage de l'étape 2 à l'étape 3 (Lancement de la balade)
+    function startBalade() {
+      const screen2 = document.getElementById('screen-2');
+      screen2.style.opacity = '0';
+      screen2.style.transition = 'opacity 0.5s ease';
       setTimeout(function() {
-        landing.style.display = 'none';
+        screen2.style.display = 'none';
       }, 500);
     }
   </script>
