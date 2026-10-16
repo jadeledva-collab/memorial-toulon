@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sur les traces de la Marine à Toulon - Discovery Quest</title>
+  <title>Toulon : Histoire Maritime et Civile - Discovery Quest</title>
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
@@ -64,7 +64,7 @@
     }
 
     .quest-card h1 {
-      font-size: 24px;
+      font-size: 22px;
       color: var(--accent-red);
       margin-top: 0;
       text-align: center;
@@ -147,7 +147,7 @@
       font-family: "Georgia", serif;
     }
 
-    /* Effet Carte Ancienne : Filtre sépia poussé, contraste et grain moucheté */
+    /* Effet Carte Ancienne : Sépia et texture parchemin */
     .leaflet-tile-pane {
       filter: sepia(0.85) contrast(1.15) brightness(0.9) hue-rotate(-15deg);
     }
@@ -163,7 +163,6 @@
       z-index: 1;
     }
 
-    /* Bouton GPS style ancien */
     .btn-gps {
       position: absolute;
       bottom: 30px;
@@ -277,12 +276,12 @@
   <!-- PAGE 1 : Accueil -->
   <div id="page-1" class="quest-screen">
     <div class="quest-card">
-      <h1>Sur les traces de la Marine à Toulon</h1>
+      <h1>Toulon : Histoire Maritime, Militaire & Civile</h1>
       <p style="font-size: 14px; line-height: 1.6; color: var(--text-muted); margin-bottom: 25px; text-align: center;">
-        Partez à la découverte du patrimoine maritime et militaire de la cité à travers un carnet de quête historique.
+        Partez à la découverte du patrimoine historique, des luttes sociales et des récits civils de la cité à travers un carnet de quête interactif.
       </p>
       <div style="font-size: 12px; margin-bottom: 20px; color: var(--text-muted); text-align: center; font-style: italic;">
-        - Édition Historique -
+        - Édition Palimpseste -
       </div>
       <button class="btn-quest" onclick="goToPage2()">Commencer l'aventure</button>
     </div>
@@ -305,7 +304,7 @@
 
       <button class="btn-quest" onclick="startApp()">C'est parti</button>
       <div style="font-size: 10px; color: var(--text-muted); text-align: center; margin-top: 20px;">
-        © Marine à Toulon. Tous droits réservés.
+        © Toulon Discovery Quest. Tous droits réservés.
       </div>
     </div>
   </div>
@@ -415,7 +414,7 @@
           attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        // Étapes ordonnées avec leurs symboles spécifiques (style BavAR[t])
+        // Étapes ordonnées avec numéro et symbole graphique (style BavAR[t])
         var steps = [
           { num: "1", symbol: "fa-archway", title: "1. La Porte Vauban", lat: 43.122949, lng: 5.929132, img: "media/porte_vauban.jpg", history: "Sous Louis XIV, Colbert et Vauban font de Toulon un port de guerre majeur. Le site évoque aussi le lien avec le génocide arménien.", challenge: "Entrez le nom du célèbre ingénieur militaire de Louis XIV." },
           { num: "2", symbol: "fa-link", title: "2. La Corderie et le Bagne", lat: 43.123419, lng: 5.927911, img: "media/corderie.jpg", history: "La Corderie et le site du célèbre bagne de Toulon rappellent la dureté de l'histoire pénitentiaire et maritime sous l'Ancien Régime.", challenge: "Quel siècle marque l'apogée de cette institution pénitentiaire ?" },
@@ -443,13 +442,13 @@
           opacity: 0.85
         }).addTo(map);
 
-        // Marqueurs avec symboles spécifiques intégrés (style BavAR[t])
+        // Marqueurs combinant le numéro et le symbole thématique à côté
         steps.forEach(function(step) {
           var customIcon = L.divIcon({
-            className: 'custom-symbol-icon',
-            html: '<div style="background: linear-gradient(to bottom, #f4ecdc, #dfd3b0); color: #6e0d05; width: 34px; height: 34px; border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 2px solid #593e25; box-shadow: 0 3px 8px rgba(0,0,0,0.5); font-size: 14px;"><i class="fas ' + step.symbol + '"></i></div>',
-            iconSize: [34, 34],
-            iconAnchor: [17, 17]
+            className: 'custom-badge-icon',
+            html: '<div style="display: flex; align-items: center; background: linear-gradient(to bottom, #f4ecdc, #dfd3b0); border: 2px solid #593e25; border-radius: 20px; padding: 2px 8px 2px 4px; box-shadow: 0 3px 8px rgba(0,0,0,0.5); font-family: Georgia, serif; white-space: nowrap;"><span style="background: #6e0d05; color: white; border-radius: 50%; width: 22px; height: 22px; display: inline-flex; justify-content: center; align-items: center; font-weight: bold; font-size: 11px; margin-right: 5px;">' + step.num + '</span><i class="fas ' + step.symbol + '" style="color: #6e0d05; font-size: 13px;"></i></div>',
+            iconSize: [75, 32],
+            iconAnchor: [37, 16]
           });
 
           var marker = L.marker([step.lat, step.lng], { icon: customIcon }).addTo(map);
