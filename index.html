@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Toulon : Histoire Maritime et Civile - Discovery Quest</title>
+  <title>Toulon : Histoire Maritime, Militaire & Civile - Discovery Quest</title>
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
@@ -13,13 +13,13 @@
 
   <style>
     :root {
-      --parchment-bg: #dfd3b0;
-      --parchment-card: #f4ecdc;
-      --sepia-dark: #26180e;
-      --sepia-border: #593e25;
-      --accent-red: #6e0d05;
-      --text-main: #26180e;
-      --text-muted: #4e3826;
+      --parchment-bg: #d5c4a1;
+      --parchment-card: #ece1c9;
+      --sepia-dark: #1f140c;
+      --sepia-border: #4a331f;
+      --accent-red: #5e0b04;
+      --text-main: #1f140c;
+      --text-muted: #3d2a1a;
     }
 
     body, html {
@@ -32,6 +32,17 @@
       color: var(--text-main);
     }
 
+    /* Motif de grain moucheté / texture vieille carte en overlay CSS */
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-image: radial-gradient(rgba(74, 51, 31, 0.15) 1px, transparent 0);
+      background-size: 4px 4px;
+      pointer-events: none;
+      z-index: 999999;
+    }
+
     /* Écrans de démarrage et configuration - Style Parchemin Ancien */
     .quest-screen {
       position: fixed;
@@ -39,7 +50,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: radial-gradient(circle, rgba(50,35,22,0.92) 0%, rgba(15,10,6,0.98) 100%), url('media/toulon.jpg') no-repeat center center;
+      background: radial-gradient(circle, rgba(40,27,16,0.95) 0%, rgba(10,6,3,0.99) 100%), url('media/toulon.jpg') no-repeat center center;
       background-size: cover;
       z-index: 99999;
       display: flex;
@@ -58,9 +69,9 @@
       max-width: 480px;
       padding: 40px;
       border-radius: 2px;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.85), inset 0 0 50px rgba(89,62,37,0.25);
+      box-shadow: 0 30px 70px rgba(0,0,0,0.9), inset 0 0 60px rgba(74,51,31,0.3);
       text-align: left;
-      border: 5px double var(--sepia-border);
+      border: 6px double var(--sepia-border);
     }
 
     .quest-card h1 {
@@ -76,9 +87,9 @@
     }
 
     .btn-quest {
-      background: linear-gradient(to bottom, #7c1a12, #480000);
-      color: #f4ecdc;
-      border: 2px solid #2b0000;
+      background: linear-gradient(to bottom, #6e150f, #3b0000);
+      color: #ece1c9;
+      border: 2px solid #200000;
       width: 100%;
       padding: 14px;
       font-size: 15px;
@@ -87,12 +98,12 @@
       border-radius: 2px;
       cursor: pointer;
       margin-top: 25px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
       text-transform: uppercase;
       letter-spacing: 1px;
     }
     .btn-quest:hover {
-      background: linear-gradient(to bottom, #480000, #2b0000);
+      background: linear-gradient(to bottom, #3b0000, #200000);
     }
 
     /* Application et carte */
@@ -117,7 +128,7 @@
       box-sizing: border-box;
       z-index: 1000;
       border-bottom: 3px solid var(--sepia-border);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
     }
 
     .nav-icons {
@@ -136,7 +147,7 @@
       top: 60px;
       left: 0;
       width: 100%;
-      background-color: #d1c29b;
+      background-color: #c4b492;
       color: var(--text-main);
       text-align: center;
       padding: 10px;
@@ -147,9 +158,9 @@
       font-family: "Georgia", serif;
     }
 
-    /* Effet Carte Ancienne : Sépia et texture parchemin */
+    /* Effet Carte Ancienne poussé : Filtre sépia fort et contraste */
     .leaflet-tile-pane {
-      filter: sepia(0.85) contrast(1.15) brightness(0.9) hue-rotate(-15deg);
+      filter: sepia(0.9) contrast(1.2) brightness(0.88) hue-rotate(-15deg);
     }
 
     #map {
@@ -159,7 +170,7 @@
       left: 0;
       right: 0;
       width: 100%;
-      background-color: #dfd3b0 !important;
+      background-color: var(--parchment-bg) !important;
       z-index: 1;
     }
 
@@ -176,7 +187,7 @@
       font-size: 18px;
       cursor: pointer;
       z-index: 1000;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.6);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -194,7 +205,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(25, 15, 8, 0.85);
+      background: rgba(20, 12, 6, 0.88);
       z-index: 10000;
       justify-content: center;
       align-items: center;
@@ -209,11 +220,11 @@
       max-width: 480px;
       padding: 30px;
       border-radius: 2px;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.85);
+      box-shadow: 0 30px 70px rgba(0,0,0,0.9);
       max-height: 90vh;
       overflow-y: auto;
       box-sizing: border-box;
-      border: 5px double var(--sepia-border);
+      border: 6px double var(--sepia-border);
       text-align: center;
     }
 
@@ -239,7 +250,7 @@
     .quest-input {
       width: 100%;
       padding: 12px;
-      background: #fffcf5;
+      background: #fbf6ec;
       border: 2px solid var(--sepia-border);
       color: var(--text-main);
       border-radius: 2px;
@@ -266,7 +277,7 @@
       margin-top: 15px;
     }
     .btn-outline:hover {
-      background: rgba(89, 62, 37, 0.15);
+      background: rgba(74, 51, 31, 0.15);
     }
   </style>
 </head>
@@ -336,7 +347,7 @@
       
       <img id="modal-img" src="" alt="Illustration" class="quest-modal-img" style="display: none;">
       
-      <div style="text-align: left; font-size: 13px; color: var(--text-main); line-height: 1.5; margin-bottom: 15px; background: #fffcf5; padding: 12px; border-radius: 2px; border-left: 4px solid var(--accent-red); border: 2px solid var(--sepia-border);">
+      <div style="text-align: left; font-size: 13px; color: var(--text-main); line-height: 1.5; margin-bottom: 15px; background: #fbf6ec; padding: 12px; border-radius: 2px; border-left: 4px solid var(--accent-red); border: 2px solid var(--sepia-border);">
         <strong>Fait historique :</strong><br><span id="modal-history"></span>
       </div>
 
@@ -414,7 +425,7 @@
           attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        // Étapes ordonnées avec numéro et symbole graphique (style BavAR[t])
+        // Étapes avec numéro dans le rond et symbole à côté sur la carte
         var steps = [
           { num: "1", symbol: "fa-archway", title: "1. La Porte Vauban", lat: 43.122949, lng: 5.929132, img: "media/porte_vauban.jpg", history: "Sous Louis XIV, Colbert et Vauban font de Toulon un port de guerre majeur. Le site évoque aussi le lien avec le génocide arménien.", challenge: "Entrez le nom du célèbre ingénieur militaire de Louis XIV." },
           { num: "2", symbol: "fa-link", title: "2. La Corderie et le Bagne", lat: 43.123419, lng: 5.927911, img: "media/corderie.jpg", history: "La Corderie et le site du célèbre bagne de Toulon rappellent la dureté de l'histoire pénitentiaire et maritime sous l'Ancien Régime.", challenge: "Quel siècle marque l'apogée de cette institution pénitentiaire ?" },
@@ -430,25 +441,28 @@
           { num: "12", symbol: "fa-feather-alt", title: "12. Stèle Frédéric Mistral", lat: 43.108336, lng: 5.946272, img: "media/stele_frederic_mistral.jpg", history: "Ce site évoque le retour de la Marine à Toulon après les conflits, en particulier l'accueil et l'histoire des bâtiments de surface de la flotte.", challenge: "Quel poète provençal donne son nom à ce site ?" }
         ];
 
-        // Tracé du parcours : ligne discontinue style parchemin ancien
+        // Tracé du parcours en pointillés style parchemin
         var latLngs = steps.map(function(step) {
           return [step.lat, step.lng];
         });
 
         L.polyline(latLngs, {
-          color: '#593e25',
+          color: '#4a331f',
           weight: 3,
-          dashArray: '4, 10',
+          dashArray: '5, 8',
           opacity: 0.85
         }).addTo(map);
 
-        // Marqueurs combinant le numéro et le symbole thématique à côté
+        // Marqueurs : rond avec numéro + symbole historique positionné juste à côté
         steps.forEach(function(step) {
           var customIcon = L.divIcon({
-            className: 'custom-badge-icon',
-            html: '<div style="display: flex; align-items: center; background: linear-gradient(to bottom, #f4ecdc, #dfd3b0); border: 2px solid #593e25; border-radius: 20px; padding: 2px 8px 2px 4px; box-shadow: 0 3px 8px rgba(0,0,0,0.5); font-family: Georgia, serif; white-space: nowrap;"><span style="background: #6e0d05; color: white; border-radius: 50%; width: 22px; height: 22px; display: inline-flex; justify-content: center; align-items: center; font-weight: bold; font-size: 11px; margin-right: 5px;">' + step.num + '</span><i class="fas ' + step.symbol + '" style="color: #6e0d05; font-size: 13px;"></i></div>',
-            iconSize: [75, 32],
-            iconAnchor: [37, 16]
+            className: 'custom-map-marker',
+            html: '<div style="position: relative; width: 34px; height: 34px;">' +
+                    '<div style="background: linear-gradient(to bottom, #6e150f, #3b0000); color: #ece1c9; width: 32px; height: 32px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; border: 2px solid #ece1c9; box-shadow: 0 3px 8px rgba(0,0,0,0.7); font-size: 13px; font-family: Georgia, serif;">' + step.num + '</div>' +
+                    '<div style="position: absolute; top: -6px; right: -12px; background: #ece1c9; color: #5e0b04; border: 1.5px solid #4a331f; border-radius: 50%; width: 20px; height: 20px; display: flex; justify-content: center; align-items: center; font-size: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.4);"><i class="fas ' + step.symbol + '"></i></div>' +
+                  '</div>',
+            iconSize: [34, 34],
+            iconAnchor: [17, 17]
           });
 
           var marker = L.marker([step.lat, step.lng], { icon: customIcon }).addTo(map);
@@ -476,7 +490,7 @@
             userMarker = L.marker([lat, lng], {
               icon: L.divIcon({
                 className: 'user-pos-icon',
-                html: '<div style="background-color: #6e0d05; width: 16px; height: 16px; border-radius: 50%; border: 3px solid #f4ecdc; box-shadow: 0 0 10px rgba(0,0,0,0.8);"></div>',
+                html: '<div style="background-color: #5e0b04; width: 16px; height: 16px; border-radius: 50%; border: 3px solid #ece1c9; box-shadow: 0 0 10px rgba(0,0,0,0.9);"></div>',
                 iconSize: [16, 16],
                 iconAnchor: [8, 8]
               })
