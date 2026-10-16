@@ -147,7 +147,11 @@
       font-family: "Georgia", serif;
     }
 
-    /* Carte Leaflet en plein écran visible */
+    /* Filtre CSS pour transformer la carte en véritable carte ancienne / parchemin sépia */
+    .leaflet-tile-pane {
+      filter: sepia(0.65) contrast(1.1) brightness(0.95) hue-rotate(-10deg);
+    }
+
     #map {
       position: absolute;
       top: 100px;
@@ -318,7 +322,7 @@
     </div>
     
     <div class="map-banner">
-      <i class="fas fa-compass"></i> Cliquez sur un repère numéroté de la carte pour débuter l'étape
+      <i class="fas fa-compass"></i> Suivez le parcours numéroté de l'étape 1 à 12 sur la carte ancienne
     </div>
 
     <div id="map"></div>
@@ -356,7 +360,7 @@
       <h3>Aide & Informations</h3>
       <p style="font-size: 13px; line-height: 1.6; color: var(--text-muted);">
         <strong>Concept :</strong> Une visite culturelle géolocalisée sous forme de quête patrimoniale.<br><br>
-        <strong>Règles :</strong> Rendez-vous sur les points indiqués sur la carte, observez les lieux et résolvez les énigmes pour débloquer des anecdotes exclusives.
+        <strong>Règles :</strong> Suivez les étapes numérotées de 1 à 12 dans l'ordre, observez les lieux et résolvez les énigmes pour débloquer des anecdotes exclusives.
       </p>
       <div style="text-align: center;">
         <button class="btn-outline" onclick="closeAllModals()">Retour</button>
@@ -405,12 +409,12 @@
           zoomControl: true
         }).setView([43.1206, 5.9282], 14);
         
-        // Chargement du fond de carte OpenStreetMap classique et fiable
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           maxZoom: 19,
           attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
+        // Étapes ordonnées logiquement pour former le parcours de 1 à 12
         var steps = [
           { num: "1", title: "1. La Porte Vauban", lat: 43.122949, lng: 5.929132, img: "media/porte_vauban.jpg", history: "Sous Louis XIV, Colbert et Vauban font de Toulon un port de guerre majeur. Le site évoque aussi le lien avec le génocide arménien.", challenge: "Entrez le nom du célèbre ingénieur militaire de Louis XIV." },
           { num: "2", title: "2. La Corderie et le Bagne", lat: 43.123419, lng: 5.927911, img: "media/corderie.jpg", history: "La Corderie et le site du célèbre bagne de Toulon rappellent la dureté de l'histoire pénitentiaire et maritime sous l'Ancien Régime.", challenge: "Quel siècle marque l'apogée de cette institution pénitentiaire ?" },
@@ -426,6 +430,19 @@
           { num: "12", title: "12. Stèle Frédéric Mistral", lat: 43.108336, lng: 5.946272, img: "media/stele_frederic_mistral.jpg", history: "Ce site évoque le retour de la Marine à Toulon après les conflits, en particulier l'accueil et l'histoire des bâtiments de surface de la flotte.", challenge: "Quel poète provençal donne son nom à ce site ?" }
         ];
 
+        // Création du tracé du parcours (ligne reliant les étapes dans l'ordre)
+        var latLngs = steps.map(function(step) {
+          return [step.lat, step.lng];
+        });
+
+        L.polyline(latLngs, {
+          color: '#7c0a02',
+          weight: 3,
+          dashArray: '6, 8',
+          opacity: 0.8
+        }).addTo(map);
+
+        // Ajout des marqueurs numérotés
         steps.forEach(function(step) {
           var numberedIcon = L.divIcon({
             className: 'custom-number-icon',
