@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Toulon Discovery Quest</title>
+  <title>Sur les traces de la Marine à Toulon</title>
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
@@ -13,7 +13,7 @@
 
   <style>
     :root {
-      --primary-red: #c91c30;
+      --primary-red: #e63946;
       --primary-blue: #1d3557;
       --pure-white: #ffffff;
       --light-bg: #f8f9fa;
@@ -28,7 +28,7 @@
       background-color: var(--primary-red);
     }
 
-    /* --- PAGE 1 & 2 : Écrans de démarrage et configuration --- */
+    /* Écrans de démarrage et configuration */
     .quest-screen {
       position: fixed;
       top: 0;
@@ -81,10 +81,10 @@
       transition: background 0.2s;
     }
     .btn-quest:hover {
-      background-color: #a01524;
+      background-color: #d90429;
     }
 
-    /* --- PAGE 3 : La Carte et la barre de navigation supérieure --- */
+    /* Application et carte */
     #app-container {
       display: none;
       width: 100%;
@@ -123,7 +123,7 @@
       box-sizing: border-box;
     }
 
-    /* --- MODALE DE QUÉTE (Écrans de type "Rendez-vous" et "Défi") --- */
+    /* Fenêtre modale de Quête (Indice -> Histoire & Image) */
     .quest-modal {
       display: none;
       position: fixed;
@@ -131,7 +131,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.6);
+      background: rgba(0,0,0,0.7);
       z-index: 10000;
       justify-content: center;
       align-items: center;
@@ -142,16 +142,26 @@
     .quest-modal-content {
       background: var(--pure-white);
       width: 100%;
-      max-width: 450px;
+      max-width: 500px;
       padding: 30px;
-      border-radius: 10px;
+      border-radius: 12px;
       text-align: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+      max-height: 90vh;
+      overflow-y: auto;
     }
 
     .quest-modal-content h3 {
       color: var(--primary-red);
       margin-top: 0;
+    }
+
+    .quest-modal-img {
+      width: 100%;
+      max-height: 220px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 15px;
     }
 
     .quest-input {
@@ -173,7 +183,7 @@
   <div id="page-1" class="quest-screen">
     <div style="font-size: 32px; font-weight: bold; margin-bottom: 15px;">Bienvenue !</div>
     <p style="max-width: 450px; font-size: 15px; line-height: 1.5; margin-bottom: 30px;">
-      Bienvenue dans la Discovery Quest : Sur les traces de la Marine à Toulon. Une visite qui vous mènera aux quatre coins de la ville.
+      Bienvenue dans cette visite interactive qui vous mènera aux quatre coins de l'histoire maritime, militaire et civile de Toulon.
     </p>
     <div style="font-size: 13px; margin-bottom: 25px; opacity: 0.9;">
       - Langue : Français<br>- Options d'accessibilité disponibles
@@ -201,7 +211,7 @@
     </div>
   </div>
 
-  <!-- PAGE 3 : Application avec la carte et la barre supérieure -->
+  <!-- PAGE 3 : Carte interactive -->
   <div id="app-container">
     <div class="top-nav-bar">
       <div class="nav-icons">
@@ -210,28 +220,36 @@
         <i class="fas fa-box-open" title="Inventaire"></i>
         <i class="fas fa-question-circle" title="Aide"></i>
       </div>
-      <div style="color: white; font-weight: bold; font-size: 15px;">Toulon Quest</div>
+      <div style="color: white; font-weight: bold; font-size: 15px;">Marine à Toulon</div>
     </div>
     <div id="map"></div>
   </div>
 
-  <!-- Fenêtre modale de Quête (Étape intermédiaire au clic sur un point) -->
+  <!-- Modale interactive pour chaque étape -->
   <div id="quest-modal" class="quest-modal">
     <div class="quest-modal-content">
+      
+      <!-- Étape A : L'indice -->
       <div id="modal-step-1">
         <i class="fas fa-map-marked-alt" style="font-size: 36px; color: var(--primary-red); margin-bottom: 10px;"></i>
         <h3 id="modal-title">Rendez-vous...</h3>
         <p id="modal-desc" style="font-size: 14px; color: #555; line-height: 1.5;"></p>
-        <button class="btn-quest" onclick="showChallenge()">J'y suis !</button>
+        <button class="btn-quest" onclick="showHistoryAndChallenge()">J'y suis !</button>
       </div>
 
+      <!-- Étape B : L'histoire, l'image et le défi -->
       <div id="modal-step-2" style="display: none;">
-        <h3 id="challenge-title">Défi de l'étape</h3>
-        <p id="challenge-desc" style="font-size: 14px; color: #555; line-height: 1.5;"></p>
-        <div style="color: var(--primary-red); font-size: 13px; font-weight: bold; margin-top: 10px;">4 essais restants</div>
-        <input type="text" class="quest-input" placeholder="Votre réponse...">
-        <button class="btn-quest" onclick="validateAnswer()">Valider</button>
+        <h3 id="history-title"></h3>
+        <img id="history-img" src="" alt="Image de l'étape" class="quest-modal-img" style="display: none;">
+        <p id="history-desc" style="font-size: 13px; color: #444; line-height: 1.5; text-align: left;"></p>
+        
+        <div style="border-top: 1px solid #eee; margin-top: 15px; padding-top: 10px;">
+          <div style="color: var(--primary-red); font-size: 12px; font-weight: bold;">4 essais restants</div>
+          <input type="text" class="quest-input" placeholder="Votre réponse...">
+          <button class="btn-quest" onclick="validateAnswer()" style="margin-top: 5px;">Valider</button>
+        </div>
       </div>
+
     </div>
   </div>
 
@@ -240,6 +258,7 @@
 
   <script>
     var map;
+    var currentStepData = null;
 
     function goToPage2() {
       document.getElementById('page-1').style.display = 'none';
@@ -250,7 +269,6 @@
       document.getElementById('page-2').style.display = 'none';
       document.getElementById('app-container').style.display = 'block';
 
-      // Initialisation de la carte centrée sur Toulon
       if (!map) {
         map = L.map('map').setView([43.1206, 5.9282], 14);
         
@@ -259,26 +277,26 @@
           attribution: '© OpenStreetMap'
         }).addTo(map);
 
-        // Liste des points de quête à Toulon
+        // Données complètes de vos 12 étapes avec images et histoires
         var steps = [
-          { title: "1. La Porte Vauban", lat: 43.122949, lng: 5.929132, desc: "À l'extérieur, devant la porte cochère.", challenge: "Entrez le nom du célèbre ingénieur militaire de Louis XIV." },
-          { title: "2. La Corderie", lat: 43.123419, lng: 5.927911, desc: "Devant le site de la Corderie et du bagne.", challenge: "Quel siècle marque l'apogée de cette institution pénitentiaire ?" },
-          { title: "3. Le Monument du Mobile", lat: 43.127847, lng: 5.929276, desc: "Devant le plus ancien monument aux morts.", challenge: "Quel corps de l'armée soutient la figure principale ?" },
-          { title: "4. La Gare de Toulon", lat: 43.124582, lng: 5.928267, desc: "Sur le parvis de la gare et près du cinéma Liberté.", challenge: "En quel mois de 1944 eut lieu la Libération de la ville ?" },
-          { title: "5. Ancienne Caserne Bazeilles", lat: 43.109954, lng: 5.931912, desc: "Devant l'ancienne caserne militaire.", challenge: "Quel est le symbole emblématique des troupes de marine ici présent ?" },
-          { title: "6. Rue Masséna", lat: 43.109739, lng: 5.935458, desc: "Dans la rue Masséna.", challenge: "Quel lien colonial majeur est évoqué dans ce quartier ?" },
-          { title: "7. Stèle du Résistant", lat: 43.103905, lng: 5.928521, desc: "Devant la stèle de la Mission Sampan.",quel: "Quel était l'objectif principal de cette mission de résistance ?" },
-          { title: "8. Monument du Sous-marinier", lat: 43.103975, lng: 5.925906, desc: "Devant le monument dédié aux sous-mariniers.", challenge: "Citez le nom d'un sous-marin marquant de la Seconde Guerre mondiale." },
-          { title: "9. Le Bathyscaphe", lat: 43.103639, lng: 5.925705, desc: "Près du site du bathyscaphe dans le port.", challenge: "Quel scientifique célèbre est associé à cette invention des grands fonds ?" },
-          { title: "10. Port Marchand", lat: 43.112629, lng: 5.929814, desc: "Aux abords de Port Marchand.", challenge: "Quel type de marine y joua un rôle clé ?" },
-          { title: "11. La Tour Royale", lat: 43.103243, lng: 5.925966, desc: "Aux abords de la Tour Royale.", challenge: "Quel commando célèbre a participé au débarquement de Provence ?" },
-          { title: "12. Stèle Frédéric Mistral", lat: 43.108336, lng: 5.946272, desc: "Devant la stèle Frédéric Mistral.", challenge: "Quel poète provençal donne son nom à ce site ?" }
+          { title: "1. La Porte Vauban", lat: 43.122949, lng: 5.929132, hint: "À l'extérieur, devant la porte cochère.", img: "media/porte_vauban.jpg", history: "Sous Louis XIV, Colbert et Vauban font de Toulon un port de guerre. Le site évoque aussi le lien avec le génocide arménien." },
+          { title: "2. La Corderie et le Bagne", lat: 43.123419, lng: 5.927911, hint: "Devant le site de la Corderie et du bagne.", img: "media/corderie.jpg", history: "La Corderie et le site du célèbre bagne de Toulon rappellent la dureté de l'histoire pénitentiaire et maritime sous l'Ancien Régime." },
+          { title: "3. Le Monument du Mobile", lat: 43.127847, lng: 5.929276, hint: "Devant le plus ancien monument aux morts de Toulon.", img: "media/monument_du_mobile.jpg", history: "Plus ancien monument aux morts de Toulon, il rend hommage aux jeunes soldats des corps mobiles de 1870 soutenus par un marin." },
+          { title: "4. La Gare et la Plaque de Lattre", lat: 43.124582, lng: 5.928267, hint: "Sur le parvis de la gare et près du cinéma Liberté.", img: "media/gare.jpg", history: "En août 1944, la Libération de Toulon passe par les combats de la gare menés par l'Armée B rappelée par la plaque près du cinéma Liberté." },
+          { title: "5. Ancienne Caserne Bazeilles", lat: 43.109954, lng: 5.931912, hint: "Devant l'ancienne caserne Bazeilles.", img: "media/caserne_bazeilles.jpg", history: "L'ancienne caserne abritait le 4e régiment d'infanterie de marine de 1854. La référence à Bazeilles renvoie à la guerre de 1870 et aux troupes de marine." },
+          { title: "6. La Rue Masséna", lat: 43.109739, lng: 5.935458, hint: "Dans la rue Masséna.", img: "media/rue_massena.jpg", history: "Ce site aborde les liens profonds entre Toulon, l'histoire coloniale et l'Indochine, notamment le trafic d'opium et les mouvements de troupes." },
+          { title: "7. Stèle du Résistant", lat: 43.103905, lng: 5.928521, hint: "Devant la stèle de la Mission Sampan.", img: "", history: "La mission Sampan et les stèles des résistants rappellent les actions de sabotage et de protection des infrastructures de l'Arsenal face à l'occupant." },
+          { title: "8. Monument du Sous-marinier", lat: 43.103975, lng: 5.925906, hint: "Devant le monument du sous-marinier.", img: "media/monument_du_sousmarinier.jpg", history: "Ce monument rend hommage aux sous-mariniers de la Seconde Guerre mondiale comme le Casabianca et le Rubis et aux tragédies toulonnaises." },
+          { title: "9. Le Bathyscaphe", lat: 43.103639, lng: 5.925705, hint: "Près du site du bathyscaphe dans le port.", img: "media/bathyscaphe.jpg", history: "Toulon est aussi un territoire d'innovation scientifique avec l'expérimentation du bathyscaphe et l'exploration des grands fonds par Auguste Piccard." },
+          { title: "10. Port Marchand", lat: 43.112629, lng: 5.929814, hint: "Aux abords de Port Marchand.", img: "", history: "Ce site met en lumière le rôle de la marine de surface pendant la Seconde Guerre mondiale et les opérations logistiques et militaires majeures." },
+          { title: "11. La Tour Royale", lat: 43.103243, lng: 5.925966, hint: "Aux abords de la Tour Royale.", img: "media/tour_royale.jpg", history: "Tour liée aux commandos et fusiliers marins de Saint-Mandrier, héritiers directs du commando Kieffer et du débarquement de Provence en 1944." },
+          { title: "12. Stèle Frédéric Mistral", lat: 43.108336, lng: 5.946272, hint: "Devant la stèle Frédéric Mistral.", img: "media/stele_frederic_mistral.jpg", history: "Ce site évoque le retour de la Marine à Toulon après les conflits, en particulier l'accueil et l'histoire des bâtiments de surface de la flotte." }
         ];
 
-        // Ajout des marqueurs cliquables sur la carte
         steps.forEach(function(step) {
           var marker = L.marker([step.lat, step.lng]).addTo(map);
           marker.on('click', function() {
+            currentStepData = step;
             openQuestModal(step);
           });
         });
@@ -286,22 +304,30 @@
       setTimeout(function() { map.invalidateSize(); }, 300);
     }
 
-    // Gestion de la modale interactive de quête
     function openQuestModal(step) {
       document.getElementById('modal-title').innerText = step.title;
-      document.getElementById('modal-desc').innerText = "Rendez-vous...\n" + step.desc;
-      document.getElementById('challenge-title').innerText = step.title + " - Défi";
-      document.getElementById('challenge-desc').innerText = step.challenge;
+      document.getElementById('modal-desc').innerText = "Rendez-vous...\n" + step.hint;
       
-      // Réaffichage de l'étape 1 de la modale (indice)
+      // Réinitialisation pour afficher d'abord l'indice
       document.getElementById('modal-step-1').style.display = 'block';
       document.getElementById('modal-step-2').style.display = 'none';
       document.getElementById('quest-modal').style.display = 'flex';
     }
 
-    function showChallenge() {
+    function showHistoryAndChallenge() {
       document.getElementById('modal-step-1').style.display = 'none';
       document.getElementById('modal-step-2').style.display = 'block';
+
+      document.getElementById('history-title').innerText = currentStepData.title;
+      document.getElementById('history-desc').innerText = currentStepData.history;
+
+      var imgEl = document.getElementById('history-img');
+      if (currentStepData.img && currentStepData.img !== "") {
+        imgEl.src = currentStepData.img;
+        imgEl.style.display = 'block';
+      } else {
+        imgEl.style.display = 'none';
+      }
     }
 
     function validateAnswer() {
