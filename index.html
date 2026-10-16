@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Toulon : Histoire maritime, militaire & civile - Discovery Quest</title>
+  <title>Toulon : Histoire Maritime, Militaire & Civile - Discovery Quest</title>
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
@@ -157,7 +157,7 @@
       font-family: "Georgia", serif;
     }
 
-    /* Filtre carte style parchemin lumineux et lisible (sans grain parasite) */
+    /* Filtre carte style parchemin lumineux et lisible */
     .leaflet-tile-pane {
       filter: sepia(0.65) contrast(1.1) brightness(0.95) hue-rotate(-10deg);
     }
@@ -286,7 +286,7 @@
   <!-- PAGE 1 : Accueil -->
   <div id="page-1" class="quest-screen">
     <div class="quest-card">
-      <h1>Toulon : histoire maritime, militaire & civile</h1>
+      <h1>Toulon : Histoire Maritime, Militaire & Civile</h1>
       <p style="font-size: 14px; line-height: 1.6; color: var(--text-muted); margin-bottom: 25px; text-align: center;">
         Partez à la découverte du patrimoine historique, des luttes sociales et des récits civils de la cité à travers un carnet de quête interactif.
       </p>
@@ -424,23 +424,23 @@
           attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        // Étapes avec numéro dans le rond et symbole à côté
+        // Étapes avec les noms de fichiers image exacts (avec accents)
         var steps = [
           { num: "1", symbol: "fa-archway", title: "1. La Porte Vauban", lat: 43.122949, lng: 5.929132, img: "media/porte_vauban.jpg", history: "Sous Louis XIV, Colbert et Vauban font de Toulon un port de guerre majeur. Le site évoque aussi le lien avec le génocide arménien.", challenge: "Entrez le nom du célèbre ingénieur militaire de Louis XIV." },
           { num: "2", symbol: "fa-link", title: "2. La Corderie et le Bagne", lat: 43.123419, lng: 5.927911, img: "media/corderie.jpg", history: "La Corderie et le site du célèbre bagne de Toulon rappellent la dureté de l'histoire pénitentiaire et maritime sous l'Ancien Régime.", challenge: "Quel siècle marque l'apogée de cette institution pénitentiaire ?" },
           { num: "3", symbol: "fa-monument", title: "3. Le Monument du Mobile", lat: 43.127847, lng: 5.929276, img: "media/monument_du_mobile.jpg", history: "Plus ancien monument aux morts de Toulon, il rend hommage aux jeunes soldats des corps mobiles de 1870 soutenus par un marin.", challenge: "Quel corps de l'armée soutient la figure principale ?" },
           { num: "4", symbol: "fa-train", title: "4. La Gare et la Plaque", lat: 43.124582, lng: 5.928267, img: "media/gare.jpg", history: "En août 1944, la Libération de Toulon passe par les combats de la gare menés par l'Armée B rappelée par la plaque près du cinéma Liberté.", challenge: "En quel mois de 1944 eut lieu la Libération de la ville ?" },
           { num: "5", symbol: "fa-shield-alt", title: "5. Ancienne Caserne Bazeilles", lat: 43.109954, lng: 5.931912, img: "media/caserne_bazeilles.jpg", history: "L'ancienne caserne abritait le 4e régiment d'infanterie de marine de 1854. La référence à Bazeilles renvoie à la guerre de 1870.", challenge: "Quel est le symbole emblématique des troupes de marine présent ici ?" },
-          { num: "6", symbol: "fa-road", title: "6. La Rue Masséna", lat: 43.109739, lng: 5.935458, img: "media/rue_massena.jpg", history: "Ce site aborde les liens profonds entre Toulon, l'histoire coloniale et l'Indochine, notamment le trafic d'opium et les mouvements de troupes.", challenge: "Quel lien colonial majeur est évoqué dans ce quartier ?" },
-          { num: "7", symbol: "fa-flag", title: "7. Stèle du Résistant", lat: 43.103905, lng: 5.928521, img: "", history: "La mission Sampan et les stèles des résistants rappellent les actions de sabotage et de protection des infrastructures de l'Arsenal face à l'occupant.", challenge: "Quel était l'objectif principal de cette mission de résistance ?" },
+          { num: "6", symbol: "fa-road", title: "6. La Rue Masséna", lat: 43.109739, lng: 5.935458, img: "media/rue_masséna.jpg", history: "Ce site aborde les liens profonds entre Toulon, l'histoire coloniale et l'Indochine, notamment le trafic d'opium et les mouvements de troupes.", challenge: "Quel lien colonial majeur est évoqué dans ce quartier ?" },
+          { num: "7", symbol: "fa-flag", title: "7. Stèle du Résistant", lat: 43.103905, lng: 5.928521, img: "media/stèle_du_resistant.jpg", history: "La mission Sampan et les stèles des résistants rappellent les actions de sabotage et de protection des infrastructures de l'Arsenal face à l'occupant.", challenge: "Quel était l'objectif principal de cette mission de résistance ?" },
           { num: "8", symbol: "fa-anchor", title: "8. Monument du Sous-marinier", lat: 43.103975, lng: 5.925906, img: "media/monument_du_sousmarinier.jpg", history: "Ce monument rend hommage aux sous-mariniers de la Seconde Guerre mondiale comme le Casabianca et le Rubis.", challenge: "Citez le nom d'un sous-marin marquant de la Seconde Guerre mondiale." },
           { num: "9", symbol: "fa-water", title: "9. Le Bathyscaphe", lat: 43.103639, lng: 5.925705, img: "media/bathyscaphe.jpg", history: "Toulon est aussi un territoire d'innovation scientifique avec l'expérimentation du bathyscaphe et l'exploration des grands fonds par Auguste Piccard.", challenge: "Quel scientifique célèbre est associé à cette invention ?" },
-          { num: "10", symbol: "fa-ship", title: "10. Port Marchand", lat: 43.112629, lng: 5.929814, img: "", history: "Ce site met en lumière le rôle de la marine de surface pendant la Seconde Guerre mondiale et les opérations logistiques majeures.", challenge: "Quel type de marine y joua un rôle clé ?" },
+          { num: "10", symbol: "fa-ship", title: "10. Port Marchand", lat: 43.112629, lng: 5.929814, img: "media/port_marchand.jpg", history: "Ce site met en lumière le rôle de la marine de surface pendant la Seconde Guerre mondiale et les opérations logistiques majeures.", challenge: "Quel type de marine y joua un rôle clé ?" },
           { num: "11", symbol: "fa-chess-rook", title: "11. La Tour Royale", lat: 43.103243, lng: 5.925966, img: "media/tour_royale.jpg", history: "Tour liée aux commandos et fusiliers marins de Saint-Mandrier, héritiers directs du commando Kieffer et du débarquement de Provence en 1944.", challenge: "Quel commando célèbre a participé au débarquement de Provence ?" },
-          { num: "12", symbol: "fa-feather-alt", title: "12. Stèle Frédéric Mistral", lat: 43.108336, lng: 5.946272, img: "media/stele_frederic_mistral.jpg", history: "Ce site évoque le retour de la Marine à Toulon après les conflits, en particulier l'accueil et l'histoire des bâtiments de surface de la flotte.", challenge: "Quel poète provençal donne son nom à ce site ?" }
+          { num: "12", symbol: "fa-feather-alt", title: "12. Stèle Frédéric Mistral", lat: 43.108336, lng: 5.946272, img: "media/stele_frederic_mistral.jpg", history: "Ce site évoque le retour de la Marine a Toulon après les conflits, en particulier l'accueil et l'histoire des bâtiments de surface de la flotte.", challenge: "Quel poète provençal donne son nom à ce site ?" }
         ];
 
-        // Tracé du parcours en pointillés style carte au trésor
+        // Tracé du parcours en pointillés
         var latLngs = steps.map(function(step) {
           return [step.lat, step.lng];
         });
