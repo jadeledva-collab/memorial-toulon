@@ -116,7 +116,6 @@
       cursor: pointer;
     }
 
-    /* Bandeau d'instruction pour guider l'utilisateur */
     .map-banner {
       position: absolute;
       top: 55px;
@@ -134,11 +133,35 @@
     #map {
       width: 100%;
       height: 100%;
-      padding-top: 95px; /* Laisse de la place pour la nav et le bandeau */
+      padding-top: 95px;
       box-sizing: border-box;
     }
 
-    /* Fenêtre modale de Quête */
+    /* Bouton de géolocalisation flottant sur la carte */
+    .btn-gps {
+      position: absolute;
+      bottom: 30px;
+      right: 20px;
+      background: var(--primary-blue);
+      color: white;
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      font-size: 20px;
+      cursor: pointer;
+      z-index: 1000;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: transform 0.2s;
+    }
+    .btn-gps:hover {
+      transform: scale(1.1);
+    }
+
+    /* Fenêtre modale */
     .quest-modal {
       display: none;
       position: fixed;
@@ -171,10 +194,12 @@
       margin-top: 0;
     }
 
+    /* Correction des images pour qu'elles ne soient plus coupées */
     .quest-modal-img {
       width: 100%;
-      max-height: 200px;
-      object-fit: cover;
+      max-height: 220px;
+      object-fit: contain;
+      background-color: #f1f1f1;
       border-radius: 8px;
       margin-bottom: 12px;
     }
@@ -238,33 +263,31 @@
       <div style="color: white; font-weight: bold; font-size: 15px;">Marine à Toulon</div>
     </div>
     
-    <!-- Bandeau indicatif clair -->
     <div class="map-banner">
-      <i class="fas fa-info-circle"></i> Cliquez sur un point numéroté de la carte pour lancer l'étape
+      <i class="fas fa-info-circle"></i> Cliquez sur un numéro de la carte pour lancer l'étape
     </div>
 
     <div id="map"></div>
+
+    <!-- Bouton de géolocalisation GPS -->
+    <button class="btn-gps" onclick="centerOnUser()" title="Me géolocaliser"><i class="fas fa-location-arrow"></i></button>
   </div>
 
-  <!-- Modale interactive : Fait historique -> Énigme -> Réponse -->
+  <!-- Modale interactive -->
   <div id="quest-modal" class="quest-modal">
     <div class="quest-modal-content">
       <h3 id="modal-title"></h3>
       
-      <!-- Image de l'étape -->
       <img id="modal-img" src="" alt="Illustration" class="quest-modal-img" style="display: none;">
       
-      <!-- Fait historique -->
       <div style="text-align: left; font-size: 13px; color: #444; line-height: 1.4; margin-bottom: 15px; background: #f8f9fa; padding: 10px; border-radius: 6px;">
         <strong>Fait historique :</strong> <span id="modal-history"></span>
       </div>
 
-      <!-- Énigme -->
       <div style="text-align: left; font-size: 13px; color: var(--primary-red); font-weight: bold; margin-bottom: 10px;">
         Énigme / Défi : <span id="modal-challenge" style="font-weight: normal; color: #333;"></span>
       </div>
 
-      <!-- Encart de réponse -->
       <div style="border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px;">
         <div style="color: #666; font-size: 12px; margin-bottom: 5px;">4 essais restants</div>
         <input type="text" class="quest-input" placeholder="Votre réponse...">
@@ -280,6 +303,7 @@
 
   <script>
     var map;
+    var userMarker = null;
 
     function goToPage2() {
       document.getElementById('page-1').style.display = 'none';
@@ -293,35 +317,72 @@
       if (!map) {
         map = L.map('map').setView([43.1206, 5.9282], 14);
         
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        // Fond de carte stylisé et épuré (CartoDB Positron) adapté au design de quête
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
           maxZoom: 19,
-          attribution: '© OpenStreetMap'
+          attribution: '© OpenStreetMap & CartoDB'
         }).addTo(map);
 
-        // Données des étapes (Fait historique + Énigme)
         var steps = [
-          { title: "1. La Porte Vauban", lat: 43.122949, lng: 5.929132, img: "media/porte_vauban.jpg", history: "Sous Louis XIV, Colbert et Vauban font de Toulon un port de guerre majeur. Le site évoque aussi le lien avec le génocide arménien.", challenge: "Entrez le nom du célèbre ingénieur militaire de Louis XIV." },
-          { title: "2. La Corderie et le Bagne", lat: 43.123419, lng: 5.927911, img: "media/corderie.jpg", history: "La Corderie et le site du célèbre bagne de Toulon rappellent la dureté de l'histoire pénitentiaire et maritime sous l'Ancien Régime.", challenge: "Quel siècle marque l'apogée de cette institution pénitentiaire ?" },
-          { title: "3. Le Monument du Mobile", lat: 43.127847, lng: 5.929276, img: "media/monument_du_mobile.jpg", history: "Plus ancien monument aux morts de Toulon, il rend hommage aux jeunes soldats des corps mobiles de 1870 soutenus par un marin.", challenge: "Quel corps de l'armée soutient la figure principale ?" },
-          { title: "4. La Gare et la Plaque", lat: 43.124582, lng: 5.928267, img: "media/gare.jpg", history: "En août 1944, la Libération de Toulon passe par les combats de la gare menés par l'Armée B rappelée par la plaque près du cinéma Liberté.", challenge: "En quel mois de 1944 eut lieu la Libération de la ville ?" },
-          { title: "5. Ancienne Caserne Bazeilles", lat: 43.109954, lng: 5.931912, img: "media/caserne_bazeilles.jpg", history: "L'ancienne caserne abritait le 4e régiment d'infanterie de marine de 1854. La référence à Bazeilles renvoie à la guerre de 1870.", challenge: "Quel est le symbole emblématique des troupes de marine présent ici ?" },
-          { title: "6. La Rue Masséna", lat: 43.109739, lng: 5.935458, img: "media/rue_massena.jpg", history: "Ce site aborde les liens profonds entre Toulon, l'histoire coloniale et l'Indochine, notamment le trafic d'opium et les mouvements de troupes.", challenge: "Quel lien colonial majeur est évoqué dans ce quartier ?" },
-          { title: "7. Stèle du Résistant", lat: 43.103905, lng: 5.928521, img: "", history: "La mission Sampan et les stèles des résistants rappellent les actions de sabotage et de protection des infrastructures de l'Arsenal face à l'occupant.", challenge: "Quel était l'objectif principal de cette mission de résistance ?" },
-          { title: "8. Monument du Sous-marinier", lat: 43.103975, lng: 5.925906, img: "media/monument_du_sousmarinier.jpg", history: "Ce monument rend hommage aux sous-mariniers de la Seconde Guerre mondiale comme le Casabianca et le Rubis.", challenge: "Citez le nom d'un sous-marin marquant de la Seconde Guerre mondiale." },
-          { title: "9. Le Bathyscaphe", lat: 43.103639, lng: 5.925705, img: "media/bathyscaphe.jpg", history: "Toulon est aussi un territoire d'innovation scientifique avec l'expérimentation du bathyscaphe et l'exploration des grands fonds par Auguste Piccard.", challenge: "Quel scientifique célèbre est associé à cette invention ?" },
-          { title: "10. Port Marchand", lat: 43.112629, lng: 5.929814, img: "", history: "Ce site met en lumière le rôle de la marine de surface pendant la Seconde Guerre mondiale et les opérations logistiques majeures.", challenge: "Quel type de marine y joua un rôle clé ?" },
-          { title: "11. La Tour Royale", lat: 43.103243, lng: 5.925966, img: "media/tour_royale.jpg", history: "Tour liée aux commandos et fusiliers marins de Saint-Mandrier, héritiers directs du commando Kieffer et du débarquement de Provence en 1944.", challenge: "Quel commando célèbre a participé au débarquement de Provence ?" },
-          { title: "12. Stèle Frédéric Mistral", lat: 43.108336, lng: 5.946272, img: "media/stele_frederic_mistral.jpg", history: "Ce site évoque le retour de la Marine à Toulon après les conflits, en particulier l'accueil et l'histoire des bâtiments de surface de la flotte.", challenge: "Quel poète provençal donne son nom à ce site ?" }
+          { num: "1", title: "1. La Porte Vauban", lat: 43.122949, lng: 5.929132, img: "media/porte_vauban.jpg", history: "Sous Louis XIV, Colbert et Vauban font de Toulon un port de guerre majeur. Le site évoque aussi le lien avec le génocide arménien.", challenge: "Entrez le nom du célèbre ingénieur militaire de Louis XIV." },
+          { num: "2", title: "2. La Corderie et le Bagne", lat: 43.123419, lng: 5.927911, img: "media/corderie.jpg", history: "La Corderie et le site du célèbre bagne de Toulon rappellent la dureté de l'histoire pénitentiaire et maritime sous l'Ancien Régime.", challenge: "Quel siècle marque l'apogée de cette institution pénitentiaire ?" },
+          { num: "3", title: "3. Le Monument du Mobile", lat: 43.127847, lng: 5.929276, img: "media/monument_du_mobile.jpg", history: "Plus ancien monument aux morts de Toulon, il rend hommage aux jeunes soldats des corps mobiles de 1870 soutenus par un marin.", challenge: "Quel corps de l'armée soutient la figure principale ?" },
+          { num: "4", title: "4. La Gare et la Plaque", lat: 43.124582, lng: 5.928267, img: "media/gare.jpg", history: "En août 1944, la Libération de Toulon passe par les combats de la gare menés par l'Armée B rappelée par la plaque près du cinéma Liberté.", challenge: "En quel mois de 1944 eut lieu la Libération de la ville ?" },
+          { num: "5", title: "5. Ancienne Caserne Bazeilles", lat: 43.109954, lng: 5.931912, img: "media/caserne_bazeilles.jpg", history: "L'ancienne caserne abritait le 4e régiment d'infanterie de marine de 1854. La référence à Bazeilles renvoie à la guerre de 1870.", challenge: "Quel est le symbole emblématique des troupes de marine présent ici ?" },
+          { num: "6", title: "6. La Rue Masséna", lat: 43.109739, lng: 5.935458, img: "media/rue_massena.jpg", history: "Ce site aborde les liens profonds entre Toulon, l'histoire coloniale et l'Indochine, notamment le trafic d'opium et les mouvements de troupes.", challenge: "Quel lien colonial majeur est évoqué dans ce quartier ?" },
+          { num: "7", title: "7. Stèle du Résistant", lat: 43.103905, lng: 5.928521, img: "", history: "La mission Sampan et les stèles des résistants rappellent les actions de sabotage et de protection des infrastructures de l'Arsenal face à l'occupant.", challenge: "Quel était l'objectif principal de cette mission de résistance ?" },
+          { num: "8", title: "8. Monument du Sous-marinier", lat: 43.103975, lng: 5.925906, img: "media/monument_du_sousmarinier.jpg", history: "Ce monument rend hommage aux sous-mariniers de la Seconde Guerre mondiale comme le Casabianca et le Rubis.", challenge: "Citez le nom d'un sous-marin marquant de la Seconde Guerre mondiale." },
+          { num: "9", title: "9. Le Bathyscaphe", lat: 43.103639, lng: 5.925705, img: "media/bathyscaphe.jpg", history: "Toulon est aussi un territoire d'innovation scientifique avec l'expérimentation du bathyscaphe et l'exploration des grands fonds par Auguste Piccard.", challenge: "Quel scientifique célèbre est associé à cette invention ?" },
+          { num: "10", title: "10. Port Marchand", lat: 43.112629, lng: 5.929814, img: "", history: "Ce site met en lumière le rôle de la marine de surface pendant la Seconde Guerre mondiale et les opérations logistiques majeures.", challenge: "Quel type de marine y joua un rôle clé ?" },
+          { num: "11", title: "11. La Tour Royale", lat: 43.103243, lng: 5.925966, img: "media/tour_royale.jpg", history: "Tour liée aux commandos et fusiliers marins de Saint-Mandrier, héritiers directs du commando Kieffer et du débarquement de Provence en 1944.", challenge: "Quel commando célèbre a participé au débarquement de Provence ?" },
+          { num: "12", title: "12. Stèle Frédéric Mistral", lat: 43.108336, lng: 5.946272, img: "media/stele_frederic_mistral.jpg", history: "Ce site évoque le retour de la Marine à Toulon après les conflits, en particulier l'accueil et l'histoire des bâtiments de surface de la flotte.", challenge: "Quel poète provençal donne son nom à ce site ?" }
         ];
 
+        // Création de marqueurs personnalisés numérotés
         steps.forEach(function(step) {
-          var marker = L.marker([step.lat, step.lng]).addTo(map);
+          var numberedIcon = L.divIcon({
+            className: 'custom-number-icon',
+            html: '<div style="background-color: #e63946; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3); font-size: 13px;">' + step.num + '</div>',
+            iconSize: [28, 28],
+            iconAnchor: [14, 14]
+          });
+
+          var marker = L.marker([step.lat, step.lng], { icon: numberedIcon }).addTo(map);
           marker.on('click', function() {
             openQuestModal(step);
           });
         });
       }
       setTimeout(function() { map.invalidateSize(); }, 300);
+    }
+
+    // Fonction pour géolocaliser l'utilisateur en direct (Guidage GPS)
+    function centerOnUser() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          var lat = position.coords.latitude;
+          var lng = position.coords.longitude;
+          
+          map.setView([lat, lng], 16);
+
+          if (!userMarker) {
+            userMarker = L.marker([lat, lng], {
+              icon: L.divIcon({
+                className: 'user-pos-icon',
+                html: '<div style="background-color: #1d3557; width: 16px; height: 16px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.5);"></div>',
+                iconSize: [16, 16],
+                iconAnchor: [8, 8]
+              })
+            }).addTo(map);
+          } else {
+            userMarker.setLatLng([lat, lng]);
+          }
+        }, function(error) {
+          alert("Impossible de récupérer votre position GPS. Vérifiez vos autorisations.");
+        });
+      } else {
+        alert("La géolocalisation n'est pas supportée par votre navigateur.");
+      }
     }
 
     function openQuestModal(step) {
