@@ -41,7 +41,7 @@
       z-index: 999999;
     }
 
-    /* Écrans de démarrage et configuration - Style Parchemin Doré */
+    /* Écrans de démarrage et configuration */
     .quest-screen {
       position: fixed;
       top: 0;
@@ -82,7 +82,6 @@
       border-bottom: 2px solid var(--parchment-border);
       padding-bottom: 15px;
       margin-bottom: 20px;
-      letter-spacing: 0.5px;
     }
 
     .btn-quest {
@@ -149,22 +148,43 @@
       background-color: #d4c297;
       color: var(--text-main);
       text-align: center;
-      padding: 10px;
+      padding: 8px;
       font-size: 13px;
       z-index: 999;
       border-bottom: 2px solid var(--parchment-border);
       font-style: italic;
-      font-family: "Georgia", serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
     }
 
-    /* Filtre carte style parchemin lumineux et lisible */
+    /* Barre de progression */
+    .progress-bar-container {
+      width: 80%;
+      max-width: 300px;
+      height: 8px;
+      background: #b59f70;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid var(--parchment-border);
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--accent-red);
+      transition: width 0.4s ease;
+    }
+
+    /* Filtre carte style parchemin */
     .leaflet-tile-pane {
       filter: sepia(0.65) contrast(1.1) brightness(0.95) hue-rotate(-10deg);
     }
 
     #map {
       position: absolute;
-      top: 100px;
+      top: 105px;
       bottom: 0;
       left: 0;
       right: 0;
@@ -196,7 +216,7 @@
       color: white;
     }
 
-    /* Fenêtres Modales style Parchemin Chaleureux */
+    /* Fenêtres Modales */
     .quest-modal {
       display: none;
       position: fixed;
@@ -332,7 +352,10 @@
     </div>
     
     <div class="map-banner">
-      <i class="fas fa-compass"></i> Suivez le parcours numéroté de l'étape 1 à 12 sur la carte
+      <span><i class="fas fa-compass"></i> Progression du parcours : <span id="progress-text">0 / 12 étapes validées</span></span>
+      <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+      </div>
     </div>
 
     <div id="map"></div>
@@ -356,7 +379,7 @@
 
       <div style="border-top: 2px solid var(--parchment-border); padding-top: 12px; margin-top: 12px;">
         <div style="color: var(--text-muted); font-size: 12px; margin-bottom: 5px;">4 essais restants</div>
-        <input type="text" class="quest-input" placeholder="Votre réponse...">
+        <input type="text" id="quest-answer-input" class="quest-input" placeholder="Votre réponse...">
         <button class="btn-quest" onclick="validateAnswer()" style="margin-top: 5px;">Valider</button>
       </div>
 
@@ -393,7 +416,9 @@
   <div id="coffre-modal" class="quest-modal">
     <div class="quest-modal-content">
       <h3>Coffre à Anecdotes</h3>
-      <p style="font-size: 13px; color: var(--text-muted); margin: 20px 0;">Le coffre est vide.<br>Résolvez des énigmes pour y accumuler vos découvertes.</p>
+      <div id="coffre-content" style="text-align: left; font-size: 13px; color: var(--text-muted); margin: 20px 0; max-height: 50vh; overflow-y: auto;">
+        Le coffre est vide.<br>Résolvez des énigmes pour y accumuler vos découvertes.
+      </div>
       <button class="btn-outline" onclick="closeAllModals()">Retour</button>
     </div>
   </div>
@@ -404,6 +429,24 @@
   <script>
     var map;
     var userMarker = null;
+    var currentStepIndex = null;
+    var unlockedAnecdotes = [];
+    var completedSteps = [];
+
+    var steps = [
+      { id: 0, num: "1", symbol: "fa-archway", title: "1. La Porte Vauban", lat: 43.122949, lng: 5.929132, img: "media/porte_vauban.jpg", history: "Sous Louis XIV, Colbert et Vauban font de Toulon un port de guerre majeur. Le site évoque aussi le lien avec le génocide arménien.", challenge: "Entrez le nom du célèbre ingénieur militaire de Louis XIV." },
+      { id: 1, num: "2", symbol: "fa-link", title: "2. La Corderie et le Bagne", lat: 43.123419, lng: 5.927911, img: "media/corderie.jpg", history: "La Corderie et le site du célèbre bagne de Toulon rappellent la dureté de l'histoire pénitentiaire et maritime sous l'Ancien Régime.", challenge: "Quel siècle marque l'apogée de cette institution pénitentiaire ?" },
+      { id: 2, num: "3", symbol: "fa-monument", title: "3. Le Monument du Mobile", lat: 43.127847, lng: 5.929276, img: "media/monument_du_mobile.jpg", history: "Plus ancien monument aux morts de Toulon, il rend hommage aux jeunes soldats des corps mobiles de 1870 soutenus par un marin.", challenge: "Quel corps de l'armée soutient la figure principale ?" },
+      { id: 3, num: "4", symbol: "fa-train", title: "4. La Gare et la Plaque", lat: 43.124582, lng: 5.928267, img: "media/gare.jpg", history: "En août 1944, la Libération de Toulon passe par les combats de la gare menés par l'Armée B rappelée par la plaque près du cinéma Liberté.", challenge: "En quel mois de 1944 eut lieu la Libération de la ville ?" },
+      { id: 4, num: "5", symbol: "fa-shield-alt", title: "5. Ancienne Caserne Bazeilles", lat: 43.109954, lng: 5.931912, img: "media/caserne_bazeilles.jpg", history: "L'ancienne caserne abritait le 4e régiment d'infanterie de marine de 1854. La référence à Bazeilles renvoie à la guerre de 1870.", challenge: "Quel est le symbole emblématique des troupes de marine présent ici ?" },
+      { id: 5, num: "6", symbol: "fa-road", title: "6. La Rue Masséna", lat: 43.109739, lng: 5.935458, img: "media/rue_masséna.jpg", history: "Ce site aborde les liens profonds entre Toulon, l'histoire coloniale et l'Indochine, notamment le trafic d'opium et les mouvements de troupes.", challenge: "Quel lien colonial majeur est évoqué dans ce quartier ?" },
+      { id: 6, num: "7", symbol: "fa-flag", title: "7. Stèle du Résistant", lat: 43.103905, lng: 5.928521, img: "media/stèle_du_resistant.jpg", history: "La mission Sampan et les stèles des résistants rappellent les actions de sabotage et de protection des infrastructures de l'Arsenal face à l'occupant.", challenge: "Quel était l'objectif principal de cette mission de résistance ?" },
+      { id: 7, num: "8", symbol: "fa-anchor", title: "8. Monument du Sous-marinier", lat: 43.103975, lng: 5.925906, img: "media/monument_du_sousmarinier.jpg", history: "Ce monument rend hommage aux sous-mariniers de la Seconde Guerre mondiale comme le Casabianca et le Rubis.", challenge: "Citez le nom d'un sous-marin marquant de la Seconde Guerre mondiale." },
+      { id: 8, num: "9", symbol: "fa-water", title: "9. Le Bathyscaphe", lat: 43.103639, lng: 5.925705, img: "media/bathyscaphe.jpg", history: "Toulon est aussi un territoire d'innovation scientifique avec l'expérimentation du bathyscaphe et l'exploration des grands fonds par Auguste Piccard.", challenge: "Quel scientifique célèbre est associé à cette invention ?" },
+      { id: 9, num: "10", symbol: "fa-ship", title: "10. Port Marchand", lat: 43.112629, lng: 5.929814, img: "media/port_marchand.jpg", history: "Ce site met en lumière le rôle de la marine de surface pendant la Seconde Guerre mondiale et les opérations logistiques majeures.", challenge: "Quel type de marine y joua un rôle clé ?" },
+      { id: 10, num: "11", symbol: "fa-chess-rook", title: "11. La Tour Royale", lat: 43.103243, lng: 5.925966, img: "media/tour_royale.jpg", history: "Tour liée aux commandos et fusiliers marins de Saint-Mandrier, héritiers directs du commando Kieffer et du débarquement de Provence en 1944.", challenge: "Quel commando célèbre a participé au débarquement de Provence ?" },
+      { id: 11, num: "12", symbol: "fa-feather-alt", title: "12. Stèle Frédéric Mistral", lat: 43.108336, lng: 5.946272, img: "media/stele_frederic_mistral.jpg", history: "Ce site évoque le retour de la Marine à Toulon après les conflits, en particulier l'accueil et l'histoire des bâtiments de surface de la flotte.", challenge: "Quel poète provençal donne son nom à ce site ?" }
+    ];
 
     function goToPage2() {
       document.getElementById('page-1').style.display = 'none';
@@ -424,23 +467,6 @@
           attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        // Étapes avec les noms de fichiers image exacts (avec accents)
-        var steps = [
-          { num: "1", symbol: "fa-archway", title: "1. La Porte Vauban", lat: 43.122949, lng: 5.929132, img: "media/porte_vauban.jpg", history: "Sous Louis XIV, Colbert et Vauban font de Toulon un port de guerre majeur. Le site évoque aussi le lien avec le génocide arménien.", challenge: "Entrez le nom du célèbre ingénieur militaire de Louis XIV." },
-          { num: "2", symbol: "fa-link", title: "2. La Corderie et le Bagne", lat: 43.123419, lng: 5.927911, img: "media/corderie.jpg", history: "La Corderie et le site du célèbre bagne de Toulon rappellent la dureté de l'histoire pénitentiaire et maritime sous l'Ancien Régime.", challenge: "Quel siècle marque l'apogée de cette institution pénitentiaire ?" },
-          { num: "3", symbol: "fa-monument", title: "3. Le Monument du Mobile", lat: 43.127847, lng: 5.929276, img: "media/monument_du_mobile.jpg", history: "Plus ancien monument aux morts de Toulon, il rend hommage aux jeunes soldats des corps mobiles de 1870 soutenus par un marin.", challenge: "Quel corps de l'armée soutient la figure principale ?" },
-          { num: "4", symbol: "fa-train", title: "4. La Gare et la Plaque", lat: 43.124582, lng: 5.928267, img: "media/gare.jpg", history: "En août 1944, la Libération de Toulon passe par les combats de la gare menés par l'Armée B rappelée par la plaque près du cinéma Liberté.", challenge: "En quel mois de 1944 eut lieu la Libération de la ville ?" },
-          { num: "5", symbol: "fa-shield-alt", title: "5. Ancienne Caserne Bazeilles", lat: 43.109954, lng: 5.931912, img: "media/caserne_bazeilles.jpg", history: "L'ancienne caserne abritait le 4e régiment d'infanterie de marine de 1854. La référence à Bazeilles renvoie à la guerre de 1870.", challenge: "Quel est le symbole emblématique des troupes de marine présent ici ?" },
-          { num: "6", symbol: "fa-road", title: "6. La Rue Masséna", lat: 43.109739, lng: 5.935458, img: "media/rue_masséna.jpg", history: "Ce site aborde les liens profonds entre Toulon, l'histoire coloniale et l'Indochine, notamment le trafic d'opium et les mouvements de troupes.", challenge: "Quel lien colonial majeur est évoqué dans ce quartier ?" },
-          { num: "7", symbol: "fa-flag", title: "7. Stèle du Résistant", lat: 43.103905, lng: 5.928521, img: "media/stèle_du_resistant.jpg", history: "La mission Sampan et les stèles des résistants rappellent les actions de sabotage et de protection des infrastructures de l'Arsenal face à l'occupant.", challenge: "Quel était l'objectif principal de cette mission de résistance ?" },
-          { num: "8", symbol: "fa-anchor", title: "8. Monument du Sous-marinier", lat: 43.103975, lng: 5.925906, img: "media/monument_du_sousmarinier.jpg", history: "Ce monument rend hommage aux sous-mariniers de la Seconde Guerre mondiale comme le Casabianca et le Rubis.", challenge: "Citez le nom d'un sous-marin marquant de la Seconde Guerre mondiale." },
-          { num: "9", symbol: "fa-water", title: "9. Le Bathyscaphe", lat: 43.103639, lng: 5.925705, img: "media/bathyscaphe.jpg", history: "Toulon est aussi un territoire d'innovation scientifique avec l'expérimentation du bathyscaphe et l'exploration des grands fonds par Auguste Piccard.", challenge: "Quel scientifique célèbre est associé à cette invention ?" },
-          { num: "10", symbol: "fa-ship", title: "10. Port Marchand", lat: 43.112629, lng: 5.929814, img: "media/port_marchand.jpg", history: "Ce site met en lumière le rôle de la marine de surface pendant la Seconde Guerre mondiale et les opérations logistiques majeures.", challenge: "Quel type de marine y joua un rôle clé ?" },
-          { num: "11", symbol: "fa-chess-rook", title: "11. La Tour Royale", lat: 43.103243, lng: 5.925966, img: "media/tour_royale.jpg", history: "Tour liée aux commandos et fusiliers marins de Saint-Mandrier, héritiers directs du commando Kieffer et du débarquement de Provence en 1944.", challenge: "Quel commando célèbre a participé au débarquement de Provence ?" },
-          { num: "12", symbol: "fa-feather-alt", title: "12. Stèle Frédéric Mistral", lat: 43.108336, lng: 5.946272, img: "media/stele_frederic_mistral.jpg", history: "Ce site évoque le retour de la Marine a Toulon après les conflits, en particulier l'accueil et l'histoire des bâtiments de surface de la flotte.", challenge: "Quel poète provençal donne son nom à ce site ?" }
-        ];
-
-        // Tracé du parcours en pointillés
         var latLngs = steps.map(function(step) {
           return [step.lat, step.lng];
         });
@@ -452,12 +478,11 @@
           opacity: 0.85
         }).addTo(map);
 
-        // Marqueurs : rond avec numéro + symbole à côté
         steps.forEach(function(step) {
           var customIcon = L.divIcon({
             className: 'custom-map-marker',
             html: '<div style="position: relative; width: 34px; height: 34px;">' +
-                    '<div style="background: linear-gradient(to bottom, #6e0d05, #3b0502); color: #f0deb0; width: 32px; height: 32px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; border: 2px solid #f0deb0; box-shadow: 0 3px 8px rgba(0,0,0,0.8); font-size: 13px; font-family: Georgia, serif;">' + step.num + '</div>' +
+                    '<div id="marker-bg-' + step.id + '" style="background: linear-gradient(to bottom, #6e0d05, #3b0502); color: #f0deb0; width: 32px; height: 32px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; border: 2px solid #f0deb0; box-shadow: 0 3px 8px rgba(0,0,0,0.8); font-size: 13px; font-family: Georgia, serif;">' + step.num + '</div>' +
                     '<div style="position: absolute; top: -6px; right: -12px; background: #f0deb0; color: #6e0d05; border: 1.5px solid #8b5a2b; border-radius: 50%; width: 20px; height: 20px; display: flex; justify-content: center; align-items: center; font-size: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.5);"><i class="fas ' + step.symbol + '"></i></div>' +
                   '</div>',
             iconSize: [34, 34],
@@ -512,9 +537,11 @@
 
     function openQuestModal(step) {
       closeAllModals();
+      currentStepIndex = step.id;
       document.getElementById('modal-title').innerText = step.title;
       document.getElementById('modal-history').innerText = step.history;
       document.getElementById('modal-challenge').innerText = step.challenge;
+      document.getElementById('quest-answer-input').value = "";
 
       var imgEl = document.getElementById('modal-img');
       if (step.img && step.img !== "") {
@@ -535,7 +562,31 @@
     }
 
     function validateAnswer() {
-      alert("Bonne réponse ! Étape validée et ajoutée au coffre à anecdotes.");
+      if (currentStepIndex !== null && !completedSteps.includes(currentStepIndex)) {
+        completedSteps.push(currentStepIndex);
+        
+        // Ajouter l'anecdote au coffre
+        var stepData = steps[currentStepIndex];
+        unlockedAnecdotes.push('<div style="margin-bottom: 12px; border-bottom: 1px dashed var(--parchment-border); padding-bottom: 8px;"><strong>' + stepData.title + '</strong><br>' + stepData.history + '</div>');
+        
+        // Mettre à jour l'affichage du coffre
+        document.getElementById('coffre-content').innerHTML = unlockedAnecdotes.join('');
+
+        // Mettre à jour la barre de progression
+        var percent = (completedSteps.length / steps.length) * 100;
+        document.getElementById('progress-bar-fill').style.width = percent + '%';
+        document.getElementById('progress-text').innerText = completedSteps.length + ' / 12 étapes validées';
+
+        // Changer la couleur du marqueur validé sur la carte en doré/vert ancien
+        var markerBg = document.getElementById('marker-bg-' + currentStepIndex);
+        if(markerBg) {
+          markerBg.style.background = "linear-gradient(to bottom, #2d5a27, #153112)";
+        }
+
+        alert("Bonne réponse ! Étape validée et ajoutée au coffre à anecdotes.");
+      } else {
+        alert("Cette étape a déjà été validée !");
+      }
       closeAllModals();
     }
   </script>
