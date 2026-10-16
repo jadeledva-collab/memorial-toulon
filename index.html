@@ -13,13 +13,13 @@
 
   <style>
     :root {
-      --parchment-bg: #f4ecd8;
-      --parchment-card: #faf4e6;
-      --sepia-dark: #2c221e;
-      --sepia-border: #8c6d53;
-      --accent-red: #8b0000;
-      --text-main: #3b2f2f;
-      --text-muted: #6b5b52;
+      --parchment-bg: #e6dcbe;
+      --parchment-card: #f5eedc;
+      --sepia-dark: #2b1d11;
+      --sepia-border: #6b4e31;
+      --accent-red: #7c0a02;
+      --text-main: #2b1d11;
+      --text-muted: #59412b;
     }
 
     body, html {
@@ -32,14 +32,14 @@
       color: var(--text-main);
     }
 
-    /* Écrans de démarrage et configuration - Style Ancien / Parchemin */
+    /* Écrans de démarrage et configuration - Style Parchemin Ancien */
     .quest-screen {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(rgba(44, 34, 30, 0.85), rgba(44, 34, 30, 0.9)), url('media/toulon.jpg') no-repeat center center;
+      background: radial-gradient(circle, rgba(70,50,35,0.9) 0%, rgba(20,12,8,0.98) 100%), url('media/toulon.jpg') no-repeat center center;
       background-size: cover;
       z-index: 99999;
       display: flex;
@@ -58,9 +58,9 @@
       max-width: 480px;
       padding: 40px;
       border-radius: 4px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 40px rgba(107,78,49,0.2);
       text-align: left;
-      border: 3px double var(--sepia-border);
+      border: 4px double var(--sepia-border);
     }
 
     .quest-card h1 {
@@ -69,15 +69,16 @@
       margin-top: 0;
       text-align: center;
       font-family: "Georgia", serif;
-      border-bottom: 1px solid var(--sepia-border);
+      border-bottom: 2px solid var(--sepia-border);
       padding-bottom: 15px;
       margin-bottom: 20px;
+      letter-spacing: 0.5px;
     }
 
     .btn-quest {
-      background-color: var(--accent-red);
-      color: #ffffff;
-      border: 1px solid #5a0000;
+      background: linear-gradient(to bottom, #8b1e15, #5a0000);
+      color: #f5eedc;
+      border: 2px solid #380000;
       width: 100%;
       padding: 14px;
       font-size: 15px;
@@ -86,11 +87,12 @@
       border-radius: 2px;
       cursor: pointer;
       margin-top: 25px;
-      transition: background 0.2s;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
     .btn-quest:hover {
-      background-color: #6b0000;
+      background: linear-gradient(to bottom, #5a0000, #380000);
     }
 
     /* Application et carte */
@@ -114,7 +116,8 @@
       padding: 0 20px;
       box-sizing: border-box;
       z-index: 1000;
-      border-bottom: 2px solid var(--sepia-border);
+      border-bottom: 3px solid var(--sepia-border);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
     }
 
     .nav-icons {
@@ -133,21 +136,26 @@
       top: 60px;
       left: 0;
       width: 100%;
-      background-color: #e6dfcc;
+      background-color: #dcd0b0;
       color: var(--text-main);
       text-align: center;
       padding: 10px;
       font-size: 13px;
       z-index: 999;
-      border-bottom: 1px solid var(--sepia-border);
+      border-bottom: 2px solid var(--sepia-border);
       font-style: italic;
+      font-family: "Georgia", serif;
     }
 
+    /* Correction critique pour l'affichage forcé de la carte Leaflet */
     #map {
       width: 100%;
       height: 100%;
-      padding-top: 100px;
-      box-sizing: border-box;
+      position: absolute !important;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      background-color: #e6dcbe !important;
     }
 
     .btn-gps {
@@ -156,14 +164,14 @@
       right: 20px;
       background: var(--parchment-card);
       color: var(--sepia-dark);
-      border: 2px solid var(--sepia-border);
+      border: 3px double var(--sepia-border);
       width: 50px;
       height: 50px;
       border-radius: 50%;
       font-size: 18px;
       cursor: pointer;
       z-index: 1000;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -173,7 +181,7 @@
       color: white;
     }
 
-    /* Fenêtres Modales style Ancien */
+    /* Fenêtres Modales style Ancien Parchemin */
     .quest-modal {
       display: none;
       position: fixed;
@@ -181,7 +189,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(44, 34, 30, 0.75);
+      background: rgba(43, 29, 17, 0.85);
       z-index: 10000;
       justify-content: center;
       align-items: center;
@@ -197,11 +205,11 @@
       padding: 30px;
       border-radius: 4px;
       text-align: center;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
       max-height: 90vh;
       overflow-y: auto;
       box-sizing: border-box;
-      border: 3px double var(--sepia-border);
+      border: 4px double var(--sepia-border);
     }
 
     .quest-modal-content h3 {
@@ -209,7 +217,7 @@
       margin-top: 0;
       font-size: 20px;
       font-family: "Georgia", serif;
-      border-bottom: 1px solid var(--sepia-border);
+      border-bottom: 2px solid var(--sepia-border);
       padding-bottom: 10px;
     }
 
@@ -218,7 +226,7 @@
       max-height: 200px;
       object-fit: contain;
       background-color: #fff;
-      border: 1px solid var(--sepia-border);
+      border: 2px solid var(--sepia-border);
       border-radius: 2px;
       margin-bottom: 15px;
     }
@@ -227,7 +235,7 @@
       width: 100%;
       padding: 12px;
       background: #ffffff;
-      border: 1px solid var(--sepia-border);
+      border: 2px solid var(--sepia-border);
       color: var(--text-main);
       border-radius: 2px;
       margin: 12px 0;
@@ -243,7 +251,7 @@
 
     .btn-outline {
       background: transparent;
-      border: 1px solid var(--sepia-border);
+      border: 2px solid var(--sepia-border);
       color: var(--text-main);
       padding: 10px 30px;
       border-radius: 2px;
@@ -253,7 +261,7 @@
       margin-top: 15px;
     }
     .btn-outline:hover {
-      background: rgba(140, 109, 83, 0.1);
+      background: rgba(107, 78, 49, 0.15);
     }
   </style>
 </head>
@@ -262,13 +270,13 @@
 
   <!-- PAGE 1 : Accueil -->
   <div id="page-1" class="quest-screen">
-    <div class="quest-card" style="background: rgba(250, 244, 230, 0.95); border: 3px double #8c6d53;">
+    <div class="quest-card">
       <h1>Sur les traces de la Marine à Toulon</h1>
       <p style="font-size: 14px; line-height: 1.6; color: var(--text-muted); margin-bottom: 25px; text-align: center;">
         Partez à la découverte du patrimoine maritime et militaire de la cité à travers un carnet de quête historique.
       </p>
-      <div style="font-size: 12px; margin-bottom: 20px; color: var(--text-muted); text-align: center;">
-        - Langue : Français -
+      <div style="font-size: 12px; margin-bottom: 20px; color: var(--text-muted); text-align: center; font-style: italic;">
+        - Édition Historique -
       </div>
       <button class="btn-quest" onclick="goToPage2()">Commencer l'aventure</button>
     </div>
@@ -284,7 +292,7 @@
       <label style="display: block; margin: 12px 0; cursor: pointer; font-size: 14px;"><input type="radio" name="dur"> Courte : 30 minutes</label>
       <p style="font-size: 11px; color: var(--text-muted); text-align: center; margin-bottom: 20px;">Progression sauvegardée automatiquement.</p>
 
-      <div style="border-top: 1px solid var(--sepia-border); padding-top: 15px;">
+      <div style="border-top: 2px solid var(--sepia-border); padding-top: 15px;">
         <label style="color: var(--accent-red); font-weight: bold; cursor: pointer; font-size: 14px;"><input type="checkbox"> Mode Expert</label>
         <div style="font-size: 12px; color: var(--text-muted); margin-left: 20px; margin-top: 5px;">- Nombre limité d'essais<br>- Chronométré</div>
       </div>
@@ -309,7 +317,7 @@
     </div>
     
     <div class="map-banner">
-      <i class="fas fa-compass"></i> Cliquez sur un repère numéroté de la carte ancienne pour débuter l'étape
+      <i class="fas fa-compass"></i> Cliquez sur un repère numéroté de la carte pour débuter l'étape
     </div>
 
     <div id="map"></div>
@@ -323,7 +331,7 @@
       
       <img id="modal-img" src="" alt="Illustration" class="quest-modal-img" style="display: none;">
       
-      <div style="text-align: left; font-size: 13px; color: var(--text-main); line-height: 1.5; margin-bottom: 15px; background: #fff; padding: 12px; border-radius: 2px; border-left: 4px solid var(--accent-red); border: 1px solid var(--sepia-border);">
+      <div style="text-align: left; font-size: 13px; color: var(--text-main); line-height: 1.5; margin-bottom: 15px; background: #fff; padding: 12px; border-radius: 2px; border-left: 4px solid var(--accent-red); border: 2px solid var(--sepia-border);">
         <strong>Fait historique :</strong><br><span id="modal-history"></span>
       </div>
 
@@ -331,7 +339,7 @@
         Énigme :<br><span id="modal-challenge" style="font-weight: normal; color: var(--text-main);"></span>
       </div>
 
-      <div style="border-top: 1px solid var(--sepia-border); padding-top: 12px; margin-top: 12px;">
+      <div style="border-top: 2px solid var(--sepia-border); padding-top: 12px; margin-top: 12px;">
         <div style="color: var(--text-muted); font-size: 12px; margin-bottom: 5px;">4 essais restants</div>
         <input type="text" class="quest-input" placeholder="Votre réponse...">
         <button class="btn-quest" onclick="validateAnswer()" style="margin-top: 5px;">Valider</button>
@@ -361,7 +369,7 @@
       <h3>Options</h3>
       <button class="btn-quest" onclick="alert('Langue : Français')">Langue</button>
       <button class="btn-quest" onclick="alert('Options d’accessibilité activables')">Accessibilité</button>
-      <button class="btn-quest" style="background-color: #555;" onclick="if(confirm('Recommencer ?')) location.reload();">Remise à zéro</button>
+      <button class="btn-quest" style="background: linear-gradient(to bottom, #555, #333);" onclick="if(confirm('Recommencer ?')) location.reload();">Remise à zéro</button>
       <button class="btn-outline" onclick="closeAllModals()">Retour</button>
     </div>
   </div>
@@ -392,12 +400,15 @@
       document.getElementById('app-container').style.display = 'block';
 
       if (!map) {
-        map = L.map('map').setView([43.1206, 5.9282], 14);
+        // Initialisation de la carte avec affichage forcé
+        map = L.map('map', {
+          zoomControl: true
+        }).setView([43.1206, 5.9282], 14);
         
-        // --- FOND DE CARTE ANCIEN / PARCHEMIN (Sans aucune clé d'API requise) ---
+        // --- FOND DE CARTE RÉTRO / VINTAGE GARANTI SANS ERREUR ---
         L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
           maxZoom: 19,
-          attribution: '© OpenStreetMap contributors & CartoDB'
+          attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
         var steps = [
@@ -418,9 +429,9 @@
         steps.forEach(function(step) {
           var numberedIcon = L.divIcon({
             className: 'custom-number-icon',
-            html: '<div style="background-color: #8b0000; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; border: 2px solid #f4ecd8; box-shadow: 0 2px 5px rgba(0,0,0,0.4); font-size: 13px;">' + step.num + '</div>',
-            iconSize: [30, 30],
-            iconAnchor: [15, 15]
+            html: '<div style="background: linear-gradient(to bottom, #8b1e15, #5a0000); color: #f5eedc; width: 32px; height: 32px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; border: 2px solid #e6dcbe; box-shadow: 0 3px 8px rgba(0,0,0,0.6); font-size: 13px; font-family: Georgia, serif;">' + step.num + '</div>',
+            iconSize: [32, 32],
+            iconAnchor: [16, 16]
           });
 
           var marker = L.marker([step.lat, step.lng], { icon: numberedIcon }).addTo(map);
@@ -429,7 +440,11 @@
           });
         });
       }
-      setTimeout(function() { map.invalidateSize(); }, 300);
+      
+      // Forcer le rafraîchissement de la carte pour qu'elle s'affiche correctement
+      setTimeout(function() { 
+        if(map) map.invalidateSize(); 
+      }, 200);
     }
 
     function centerOnUser() {
@@ -443,9 +458,9 @@
             userMarker = L.marker([lat, lng], {
               icon: L.divIcon({
                 className: 'user-pos-icon',
-                html: '<div style="background-color: #2c221e; width: 16px; height: 16px; border-radius: 50%; border: 3px solid #f4ecd8; box-shadow: 0 0 10px rgba(0,0,0,0.5);"></div>',
-                iconSize: [16, 16],
-                iconAnchor: [8, 8]
+                html: '<div style="background-color: #7c0a02; width: 18px; height: 18px; border-radius: 50%; border: 3px solid #f5eedc; box-shadow: 0 0 10px rgba(0,0,0,0.8);"></div>',
+                iconSize: [18, 18],
+                iconAnchor: [9, 9]
               })
             }).addTo(map);
           } else {
