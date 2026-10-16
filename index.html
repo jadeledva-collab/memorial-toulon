@@ -36,50 +36,62 @@
   <link rel="stylesheet" href="css/loader.css">
 
   <style>
-    /* Styles communs aux écrans d'accueil / étapes 1 et 2 */
+    /* Thème Rouge, Blanc, Bleu */
+    :root {
+      --primary-blue: #1d3557;
+      --accent-red: #e63946;
+      --pure-white: #ffffff;
+      --soft-bg: #f1faee;
+    }
+
+    /* Écrans d'accueil / étapes */
     .screen-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(rgba(26, 37, 44, 0.92), rgba(26, 37, 44, 0.98)), url('media/toulon.jpg') no-repeat center center;
+      background: linear-gradient(rgba(29, 53, 87, 0.9), rgba(29, 53, 87, 0.96)), url('media/toulon.jpg') no-repeat center center;
       background-size: cover;
       z-index: 99999;
       display: flex;
       justify-content: center;
       align-items: center;
       font-family: sans-serif;
-      color: white;
+      color: var(--pure-white);
       padding: 20px;
       box-sizing: border-box;
       overflow-y: auto;
     }
     .screen-card {
       max-width: 550px;
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.1);
       padding: 35px;
       border-radius: 12px;
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      border: 2px solid var(--accent-red);
       box-shadow: 0 15px 35px rgba(0,0,0,0.6);
       text-align: left;
     }
     .screen-card h1 {
       font-size: 24px;
       margin-bottom: 15px;
-      color: #ffcc00;
+      color: var(--pure-white);
       text-align: center;
+      border-bottom: 2px solid var(--accent-red);
+      padding-bottom: 10px;
     }
     .screen-card p {
       font-size: 15px;
       line-height: 1.5;
       margin-bottom: 20px;
-      color: #e2e8f0;
+      color: #f1faee;
     }
+    
+    /* Boutons en Rouge & Bleu */
     .btn-action {
-      background-color: #ffcc00;
-      color: #1a252c;
+      background-color: var(--accent-red);
+      color: var(--pure-white);
       border: none;
       width: 100%;
       padding: 14px;
@@ -89,31 +101,35 @@
       cursor: pointer;
       transition: background 0.2s, transform 0.2s;
       margin-top: 20px;
+      box-shadow: 0 4px 10px rgba(230, 57, 70, 0.4);
     }
     .btn-action:hover {
-      background-color: #e6b800;
+      background-color: #d90429;
       transform: scale(1.02);
     }
+
     .options-box {
       margin-bottom: 20px;
-      background: rgba(0,0,0,0.2);
+      background: rgba(29, 53, 87, 0.6);
       padding: 15px;
       border-radius: 8px;
+      border-left: 4px solid var(--accent-red);
     }
     .options-box label {
       display: block;
       margin-bottom: 10px;
       font-size: 14px;
       cursor: pointer;
-      color: #f8fafc;
+      color: var(--pure-white);
     }
     .options-box input[type="radio"], .options-box input[type="checkbox"] {
       margin-right: 10px;
-      accent-color: #ffcc00;
+      accent-color: var(--accent-red);
     }
+    
     .duration-note {
       font-size: 12px;
-      color: #94a3b8;
+      color: #a8dadc;
       margin-top: 5px;
       margin-bottom: 15px;
       text-align: center;
@@ -125,16 +141,16 @@
     }
     .footer-legal {
       font-size: 11px;
-      color: #94a3b8;
+      color: #a8dadc;
       text-align: center;
       margin-top: 20px;
       line-height: 1.4;
     }
 
-    /* Barre de navigation supérieure (Page 3) */
+    /* Barre de navigation supérieure (Page de la carte) */
     .quest-nav-bar {
-      background: #1a252c;
-      color: white;
+      background: var(--primary-blue);
+      color: var(--pure-white);
       padding: 12px 25px;
       display: flex;
       justify-content: space-between;
@@ -146,33 +162,35 @@
       width: 100%;
       z-index: 9999;
       box-sizing: border-box;
+      border-bottom: 3px solid var(--accent-red);
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
     .quest-nav-brand {
       font-weight: bold;
       font-size: 16px;
-      color: #ffcc00;
+      color: var(--pure-white);
     }
     .quest-nav-links {
       display: flex;
       gap: 20px;
     }
     .quest-nav-links a {
-      color: #b0c4de;
+      color: #a8dadc;
       text-decoration: none;
       font-size: 14px;
+      font-weight: bold;
     }
     .quest-nav-links a:hover {
-      color: #ffffff;
+      color: var(--pure-white);
     }
     body {
       padding-top: 45px;
     }
     
     .leaflet-storymap .chapter {
-      background: #ffffff;
-      border-left: 5px solid #1a252c;
-      border-radius: 4px;
+      background: var(--pure-white);
+      border-left: 6px solid var(--accent-red);
+      border-radius: 6px;
       padding: 20px;
       margin-bottom: 30px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.08);
@@ -187,12 +205,12 @@
     <div class="screen-card">
       <h1>Bienvenue !</h1>
       <p>Bienvenue dans cette visite interactive qui vous mènera aux quatre coins de l'histoire maritime, militaire et civile de Toulon.</p>
-      <div style="margin-bottom: 15px; font-size: 14px; color: #cbd5e1;">
+      <div style="margin-bottom: 15px; font-size: 14px; color: #a8dadc;">
         - Langue : Français<br>
         - Options d'accessibilité disponibles
       </div>
-      <p style="font-size: 13px; color: #cbd5e1; font-style: italic;">Munissez-vous de votre carnet de notes ou suivez le guide pas à pas.</p>
-      <div style="font-weight: bold; text-align: center; margin-top: 15px; color: #ffcc00;">Vous êtes prêt ?</div>
+      <p style="font-size: 13px; color: #a8dadc; font-style: italic;">Munissez-vous de votre carnet de notes ou suivez le guide pas à pas.</p>
+      <div style="font-weight: bold; text-align: center; margin-top: 15px; color: var(--pure-white);">Vous êtes prêt ?</div>
       <button class="btn-action" onclick="goToScreen2()">Commencer</button>
     </div>
   </div>
@@ -203,7 +221,7 @@
       <h1>Configuration de la visite</h1>
       <p style="text-align: center; margin-bottom: 15px;">Nous allons bientôt commencer.</p>
       
-      <div style="font-weight: bold; margin-bottom: 8px; font-size: 14px; color: #ffcc00;">Quelle sera la durée de notre visite ?</div>
+      <div style="font-weight: bold; margin-bottom: 8px; font-size: 14px; color: var(--pure-white);">Quelle sera la durée de notre visite ?</div>
       <div class="options-box">
         <label><input type="radio" name="duration" value="standard" checked> Standard : 1 heure</label>
         <label><input type="radio" name="duration" value="short"> Courte : 30 minutes</label>
@@ -211,10 +229,10 @@
       <div class="duration-note">Durée indicative. Votre progression est sauvegardée automatiquement.</div>
 
       <div class="expert-box">
-        <div style="font-size: 13px; margin-bottom: 8px; color: #cbd5e1;">Pour une aventure plus corsée, vous pouvez cocher cette option :</div>
+        <div style="font-size: 13px; margin-bottom: 8px; color: #a8dadc;">Pour une aventure plus corsée, vous pouvez cocher cette option :</div>
         <div class="options-box" style="margin-bottom: 0;">
-          <label style="font-weight: bold; color: #ffcc00;"><input type="checkbox" id="expert-mode"> Mode Expert</label>
-          <div style="font-size: 12px; color: #94a3b8; margin-left: 24px; line-height: 1.4;">
+          <label style="font-weight: bold; color: var(--pure-white);"><input type="checkbox" id="expert-mode"> Mode Expert</label>
+          <div style="font-size: 12px; color: #a8dadc; margin-left: 24px; line-height: 1.4;">
             - Nombre limité d'essais<br>
             - Chronométré
           </div>
