@@ -13,10 +13,10 @@
 
   <style>
     :root {
-      --primary-red: #e63946;
-      --primary-blue: #1d3557;
+      --primary-red: #c91c30;
       --pure-white: #ffffff;
-      --light-bg: #f8f9fa;
+      --light-bg: #f4f4f4;
+      --text-dark: #333333;
     }
 
     body, html {
@@ -28,7 +28,7 @@
       background-color: var(--primary-red);
     }
 
-    /* Écrans de démarrage et configuration */
+    /* Écrans de démarrage et configuration (Pages 1 et 2) */
     .quest-screen {
       position: fixed;
       top: 0;
@@ -49,10 +49,10 @@
 
     .quest-card {
       background: var(--pure-white);
-      color: #333;
+      color: var(--text-dark);
       width: 100%;
       max-width: 500px;
-      padding: 40px;
+      padding: 35px;
       border-radius: 12px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.3);
       text-align: left;
@@ -81,10 +81,10 @@
       transition: background 0.2s;
     }
     .btn-quest:hover {
-      background-color: #d90429;
+      background-color: #a01524;
     }
 
-    /* Application et carte */
+    /* Application et carte (Page 3) */
     #app-container {
       display: none;
       width: 100%;
@@ -121,7 +121,7 @@
       top: 55px;
       left: 0;
       width: 100%;
-      background-color: var(--primary-blue);
+      background-color: #1d3557;
       color: var(--pure-white);
       text-align: center;
       padding: 10px;
@@ -137,12 +137,11 @@
       box-sizing: border-box;
     }
 
-    /* Bouton de géolocalisation flottant sur la carte */
     .btn-gps {
       position: absolute;
       bottom: 30px;
       right: 20px;
-      background: var(--primary-blue);
+      background: var(--primary-red);
       color: white;
       border: none;
       width: 50px;
@@ -155,13 +154,9 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      transition: transform 0.2s;
-    }
-    .btn-gps:hover {
-      transform: scale(1.1);
     }
 
-    /* Fenêtre modale */
+    /* Fenêtres Modales (Énigmes, Options, Aide, Coffre) */
     .quest-modal {
       display: none;
       position: fixed;
@@ -187,6 +182,7 @@
       box-shadow: 0 15px 35px rgba(0,0,0,0.4);
       max-height: 90vh;
       overflow-y: auto;
+      box-sizing: border-box;
     }
 
     .quest-modal-content h3 {
@@ -194,10 +190,9 @@
       margin-top: 0;
     }
 
-    /* Correction des images pour qu'elles ne soient plus coupées */
     .quest-modal-img {
       width: 100%;
-      max-height: 220px;
+      max-height: 200px;
       object-fit: contain;
       background-color: #f1f1f1;
       border-radius: 8px;
@@ -214,6 +209,18 @@
       text-align: center;
       font-size: 16px;
     }
+
+    /* Style des boutons secondaires (ex: Retour) */
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--primary-red);
+      color: var(--primary-red);
+      padding: 10px 30px;
+      border-radius: 30px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 15px;
+    }
   </style>
 </head>
 
@@ -223,7 +230,7 @@
   <div id="page-1" class="quest-screen">
     <div style="font-size: 32px; font-weight: bold; margin-bottom: 15px;">Bienvenue !</div>
     <p style="max-width: 450px; font-size: 15px; line-height: 1.5; margin-bottom: 30px;">
-      Bienvenue dans cette visite interactive qui vous mènera aux quatre coins de l'histoire maritime, militaire et civile de Toulon.
+      Bienvenue dans la Discovery Quest : Sur les traces de la Marine à Toulon, une visite qui vous mènera aux quatre coins de la ville.
     </p>
     <div style="font-size: 13px; margin-bottom: 25px; opacity: 0.9;">
       - Langue : Français<br>- Options d'accessibilité disponibles
@@ -237,8 +244,8 @@
       <h1>Configuration</h1>
       <p style="color: #555; font-size: 14px; text-align: center;">Nous allons bientôt commencer.<br>Quelle sera la durée de notre visite ?</p>
       
-      <label style="display: block; margin: 10px 0; cursor: pointer;"><input type="radio" name="dur" checked> Standard : 1 heure</label>
-      <label style="display: block; margin: 10px 0; cursor: pointer;"><input type="radio" name="dur"> Courte : 30 minutes</label>
+      <label style="display: block; margin: 10px 0; cursor: pointer;"><input type="radio" name="dur" checked> Standard : 1 heure (10 questions)</label>
+      <label style="display: block; margin: 10px 0; cursor: pointer;"><input type="radio" name="dur"> Courte : 30 minutes (7 questions)</label>
       <p style="font-size: 11px; color: #778; text-align: center; margin-bottom: 20px;">Durée indicative. Progression sauvegardée automatiquement.</p>
 
       <div style="border-top: 1px solid #eee; padding-top: 12px;">
@@ -247,7 +254,9 @@
       </div>
 
       <button class="btn-quest" onclick="startApp()">C'est parti !</button>
-      <div style="font-size: 10px; color: #888; text-align: center; margin-top: 15px;">© Marine à Toulon. Tous droits réservés.</div>
+      <div style="font-size: 10px; color: #888; text-align: center; margin-top: 15px;">
+        Ce site ne collecte pas de données personnelles.<br>© Marine à Toulon. Tous droits réservés.
+      </div>
     </div>
   </div>
 
@@ -256,9 +265,9 @@
     <div class="top-nav-bar">
       <div class="nav-icons">
         <i class="fas fa-home" onclick="location.reload()" title="Accueil"></i>
-        <i class="fas fa-bars" title="Menu"></i>
-        <i class="fas fa-box-open" title="Inventaire"></i>
-        <i class="fas fa-question-circle" title="Aide"></i>
+        <i class="fas fa-bars" onclick="openModal('menu-modal')" title="Menu & Options"></i>
+        <i class="fas fa-box-open" onclick="openModal('coffre-modal')" title="Coffre à Anecdotes"></i>
+        <i class="fas fa-question-circle" onclick="openModal('aide-modal')" title="Aide"></i>
       </div>
       <div style="color: white; font-weight: bold; font-size: 15px;">Marine à Toulon</div>
     </div>
@@ -268,33 +277,69 @@
     </div>
 
     <div id="map"></div>
-
-    <!-- Bouton de géolocalisation GPS -->
     <button class="btn-gps" onclick="centerOnUser()" title="Me géolocaliser"><i class="fas fa-location-arrow"></i></button>
   </div>
 
-  <!-- Modale interactive -->
+  <!-- MODALE : Étape (Fait historique -> Énigme -> Réponse) -->
   <div id="quest-modal" class="quest-modal">
     <div class="quest-modal-content">
       <h3 id="modal-title"></h3>
       
       <img id="modal-img" src="" alt="Illustration" class="quest-modal-img" style="display: none;">
       
-      <div style="text-align: left; font-size: 13px; color: #444; line-height: 1.4; margin-bottom: 15px; background: #f8f9fa; padding: 10px; border-radius: 6px;">
-        <strong>Fait historique :</strong> <span id="modal-history"></span>
+      <!-- 1. Fait historique -->
+      <div style="text-align: left; font-size: 13px; color: #444; line-height: 1.4; margin-bottom: 15px; background: #f8f9fa; padding: 12px; border-radius: 6px; border-left: 4px solid var(--primary-red);">
+        <strong>Fait historique :</strong><br><span id="modal-history"></span>
       </div>
 
+      <!-- 2. Énigme -->
       <div style="text-align: left; font-size: 13px; color: var(--primary-red); font-weight: bold; margin-bottom: 10px;">
-        Énigme / Défi : <span id="modal-challenge" style="font-weight: normal; color: #333;"></span>
+        Énigme / Défi :<br><span id="modal-challenge" style="font-weight: normal; color: #333;"></span>
       </div>
 
+      <!-- 3. Encart réponse -->
       <div style="border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px;">
         <div style="color: #666; font-size: 12px; margin-bottom: 5px;">4 essais restants</div>
         <input type="text" class="quest-input" placeholder="Votre réponse...">
         <button class="btn-quest" onclick="validateAnswer()" style="margin-top: 5px;">Valider</button>
       </div>
 
-      <button onclick="closeModal()" style="background: none; border: none; color: #888; margin-top: 15px; cursor: pointer; font-size: 12px;">Fermer</button>
+      <button class="btn-outline" onclick="closeAllModals()">Fermer</button>
+    </div>
+  </div>
+
+  <!-- MODALE : Aide -->
+  <div id="aide-modal" class="quest-modal">
+    <div class="quest-modal-content" style="text-align: left;">
+      <h3>Aide & Informations</h3>
+      <p style="font-size: 13px; line-height: 1.5; color: #555;">
+        <strong>Concept :</strong> Discovery Quest est une visite guidée sous forme de jeu. Résolvez des énigmes en vous rendant sur les points de la carte.<br><br>
+        <strong>Règles :</strong> Chaque énigme validée débloque une anecdote dans votre Coffre à Anecdotes. Utilisez le bouton GPS pour vous repérer en direct.<br><br>
+        <strong>Difficulté :</strong> Lisez bien chaque indice, observez les détails autour de vous et n'hésitez pas à vous déplacer dans la zone.
+      </p>
+      <div style="text-align: center;">
+        <button class="btn-outline" onclick="closeAllModals()">Retour</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALE : Menu & Options -->
+  <div id="menu-modal" class="quest-modal">
+    <div class="quest-modal-content">
+      <h3>Options</h3>
+      <button class="btn-quest" onclick="alert('Langue : Français (par défaut)')">Langue</button>
+      <button class="btn-quest" onclick="alert('Options d’accessibilité activables (police dyslexie, contraste)')">Accessibilité</button>
+      <button class="btn-quest" style="background-color: #555;" onclick="if(confirm('Voulez-vous vraiment recommencer ?')) location.reload();">Remise à zéro</button>
+      <button class="btn-outline" onclick="closeAllModals()">Retour</button>
+    </div>
+  </div>
+
+  <!-- MODALE : Coffre à Anecdotes -->
+  <div id="coffre-modal" class="quest-modal">
+    <div class="quest-modal-content">
+      <h3>Coffre à Anecdotes</h3>
+      <p style="font-size: 13px; color: #666; margin: 20px 0;">Le coffre est vide !<br>Retrouvez-ici les anecdotes que vous aurez débloquées en réussissant les énigmes.</p>
+      <button class="btn-outline" onclick="closeAllModals()">Retour</button>
     </div>
   </div>
 
@@ -317,7 +362,7 @@
       if (!map) {
         map = L.map('map').setView([43.1206, 5.9282], 14);
         
-        // Fond de carte stylisé et épuré (CartoDB Positron) adapté au design de quête
+        // Fond de carte stylisé thématique (CartoDB Positron propre et clair)
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
           maxZoom: 19,
           attribution: '© OpenStreetMap & CartoDB'
@@ -338,13 +383,12 @@
           { num: "12", title: "12. Stèle Frédéric Mistral", lat: 43.108336, lng: 5.946272, img: "media/stele_frederic_mistral.jpg", history: "Ce site évoque le retour de la Marine à Toulon après les conflits, en particulier l'accueil et l'histoire des bâtiments de surface de la flotte.", challenge: "Quel poète provençal donne son nom à ce site ?" }
         ];
 
-        // Création de marqueurs personnalisés numérotés
         steps.forEach(function(step) {
           var numberedIcon = L.divIcon({
             className: 'custom-number-icon',
-            html: '<div style="background-color: #e63946; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3); font-size: 13px;">' + step.num + '</div>',
-            iconSize: [28, 28],
-            iconAnchor: [14, 14]
+            html: '<div style="background-color: #c91c30; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3); font-size: 13px;">' + step.num + '</div>',
+            iconSize: [30, 30],
+            iconAnchor: [15, 15]
           });
 
           var marker = L.marker([step.lat, step.lng], { icon: numberedIcon }).addTo(map);
@@ -356,13 +400,11 @@
       setTimeout(function() { map.invalidateSize(); }, 300);
     }
 
-    // Fonction pour géolocaliser l'utilisateur en direct (Guidage GPS)
     function centerOnUser() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
           var lat = position.coords.latitude;
           var lng = position.coords.longitude;
-          
           map.setView([lat, lng], 16);
 
           if (!userMarker) {
@@ -378,14 +420,20 @@
             userMarker.setLatLng([lat, lng]);
           }
         }, function(error) {
-          alert("Impossible de récupérer votre position GPS. Vérifiez vos autorisations.");
+          alert("Impossible de récupérer votre position GPS.");
         });
       } else {
-        alert("La géolocalisation n'est pas supportée par votre navigateur.");
+        alert("La géolocalisation n'est pas supportée.");
       }
     }
 
+    function openModal(modalId) {
+      closeAllModals();
+      document.getElementById(modalId).style.display = 'flex';
+    }
+
     function openQuestModal(step) {
+      closeAllModals();
       document.getElementById('modal-title').innerText = step.title;
       document.getElementById('modal-history').innerText = step.history;
       document.getElementById('modal-challenge').innerText = step.challenge;
@@ -401,13 +449,16 @@
       document.getElementById('quest-modal').style.display = 'flex';
     }
 
-    function closeModal() {
-      document.getElementById('quest-modal').style.display = 'none';
+    function closeAllModals() {
+      var modals = document.querySelectorAll('.quest-modal');
+      modals.forEach(function(m) {
+        m.style.display = 'none';
+      });
     }
 
     function validateAnswer() {
-      alert("Bonne réponse ! Étape validée.");
-      closeModal();
+      alert("Bonne réponse ! Étape validée et ajoutée au coffre à anecdotes.");
+      closeAllModals();
     }
   </script>
 
