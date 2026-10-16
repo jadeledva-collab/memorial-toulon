@@ -147,15 +147,16 @@
       font-family: "Georgia", serif;
     }
 
-    /* Correction critique pour l'affichage forcé de la carte Leaflet */
+    /* Conteneur de la carte avec dimensions fixes absolues garanties */
     #map {
-      width: 100%;
-      height: 100%;
-      position: absolute !important;
-      top: 0;
+      position: absolute;
+      top: 100px;
+      bottom: 0;
       left: 0;
-      z-index: 1;
+      right: 0;
+      width: 100%;
       background-color: #e6dcbe !important;
+      z-index: 1;
     }
 
     .btn-gps {
@@ -399,13 +400,13 @@
       document.getElementById('page-2').style.display = 'none';
       document.getElementById('app-container').style.display = 'block';
 
+      // Initialisation de la carte si elle n'existe pas encore
       if (!map) {
-        // Initialisation de la carte avec affichage forcé
         map = L.map('map', {
           zoomControl: true
         }).setView([43.1206, 5.9282], 14);
         
-        // --- FOND DE CARTE RÉTRO / VINTAGE GARANTI SANS ERREUR ---
+        // --- FOND DE CARTE RÉTRO GARANTI SANS ERREUR ---
         L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
           maxZoom: 19,
           attribution: '© OpenStreetMap contributors'
@@ -423,7 +424,7 @@
           { num: "9", title: "9. Le Bathyscaphe", lat: 43.103639, lng: 5.925705, img: "media/bathyscaphe.jpg", history: "Toulon est aussi un territoire d'innovation scientifique avec l'expérimentation du bathyscaphe et l'exploration des grands fonds par Auguste Piccard.", challenge: "Quel scientifique célèbre est associé à cette invention ?" },
           { num: "10", title: "10. Port Marchand", lat: 43.112629, lng: 5.929814, img: "", history: "Ce site met en lumière le rôle de la marine de surface pendant la Seconde Guerre mondiale et les opérations logistiques majeures.", challenge: "Quel type de marine y joua un rôle clé ?" },
           { num: "11", title: "11. La Tour Royale", lat: 43.103243, lng: 5.925966, img: "media/tour_royale.jpg", history: "Tour liée aux commandos et fusiliers marins de Saint-Mandrier, héritiers directs du commando Kieffer et du débarquement de Provence en 1944.", challenge: "Quel commando célèbre a participé au débarquement de Provence ?" },
-          { num: "12", title: "12. Stèle Frédéric Mistral", lat: 43.108336, lng: 5.946272, img: "media/stele_frederic_mistral.jpg", history: "Ce site évoque le retour de la Marine à Toulon après les conflits, en particulier l'accueil et l'histoire des bâtiments de surface de la flotte.", challenge: "Quel poète provençal donne son nom à ce site ?" }
+          { num: "12", title: "12. Stèle Frédéric Mistral", lat: 43.108336, lng: 5.946272, img: "media/stele_frederic_mistral.jpg", history: "Ce site évoque le retour de la Marine a Toulon après les conflits, en particulier l'accueil et l'histoire des bâtiments de surface de la flotte.", challenge: "Quel poète provençal donne son nom à ce site ?" }
         ];
 
         steps.forEach(function(step) {
@@ -441,10 +442,12 @@
         });
       }
       
-      // Forcer le rafraîchissement de la carte pour qu'elle s'affiche correctement
+      // CRITIQUE : Forcer le recalcul de la taille de la carte maintenant que le conteneur est visible
       setTimeout(function() { 
-        if(map) map.invalidateSize(); 
-      }, 200);
+        if(map) {
+          map.invalidateSize();
+        }
+      }, 150);
     }
 
     function centerOnUser() {
